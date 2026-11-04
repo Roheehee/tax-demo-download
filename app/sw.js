@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v16-download-20261105';
+const VERSION = 'v17-income-20261105';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
