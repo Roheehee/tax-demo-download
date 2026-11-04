@@ -7,7 +7,7 @@
 .income-page .total-line{height:42rem;font-size:15rem;line-height:21rem;color:#333}
 .income-page .total-line:first-child{height:43rem;border-bottom-color:#e5e5e5}
 .income-page .total-line:first-child>span:first-child{gap:0}
-.income-page .total-line>span:last-child{font-size:16rem;font-weight:500}
+.income-page .total-line>span:last-child{font-size:15rem;font-weight:400;font-variant-numeric:normal}
 .income-page .income-help{
  appearance:none;-webkit-appearance:none;display:inline-flex;align-items:center;
  justify-content:center;flex:none;width:14rem;height:14rem;padding:0;
