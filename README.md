@@ -9,3 +9,5 @@
 - 配置文件与真实 iPhone 安装行为须在用户设备上核对；未签名配置文件与 Apple App 签名是不同事物。
 
 不得把原始私有项目中的个人资料、纳税文书原图或手机备份复制到本仓库。
+
+下载页和应用由 GitHub Pages 托管；苹果按钮的描述文件由现有公开匿名 Sites Worker 返回正确的 `application/x-apple-aspen-config` 类型。仓库中的同名文件为可核对的源副本；GitHub Pages 默认类型不能作为 Safari 安装识别已通过的依据。修改安装文件时必须同步两端，并核对字节一致。
