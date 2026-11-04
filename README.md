@@ -10,4 +10,6 @@
 
 不得把原始私有项目中的个人资料、纳税文书原图或手机备份复制到本仓库。
 
-下载页和应用由 GitHub Pages 托管；苹果按钮的描述文件由现有公开匿名 Sites Worker 返回正确的 `application/x-apple-aspen-config` 类型。仓库中的同名文件为可核对的源副本；GitHub Pages 默认类型不能作为 Safari 安装识别已通过的依据。修改安装文件时必须同步两端，并核对字节一致。
+下载页、应用和苹果描述文件统一由 GitHub Pages 托管，所有使用入口均为同源相对链接。2026-11-05 用户手机截图确认旧 Sites 下载域名被安全服务拦截，因此移除该域名的主下载跳转，勿重新加入。下载文件与 profile 内的应用 URL 均不再依赖 Sites。
+
+GitHub Pages 返回 `application/octet-stream`，已验证可下载完整文件，但未在用户 iPhone 验证 Safari 是否直接识别为描述文件。不能把 HTTP 200 或桌面下载通过称为 iPhone 安装成功。若手机只显示文件下载，页面同时提供直接打开应用及添加到主屏幕的入口。
