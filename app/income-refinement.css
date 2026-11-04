@@ -1,6 +1,9 @@
-/* Income list: 402-point geometry from the 2026-11-05 reference. */
+/* Income list: 402-point content geometry; reference excludes the iOS status area. */
 .income-page{background:#f5f4f9;color:#333}
-.income-page>.income-bar{height:47rem;border-bottom-color:#e2e2e2}
+/* Let iOS provide its own status indicators; reserve only the device safe inset. */
+.income-page>.income-status{height:env(safe-area-inset-top,0px);padding:0}
+.income-page>.income-status>*{display:none}
+.income-page>.income-bar{height:52.333333rem;padding-top:5.333333rem;border-bottom-color:#e2e2e2}
 .income-page>.income-bar h1{font-size:17rem;line-height:24rem;color:#333}
 .income-page>.income-bar button{font-size:15rem;line-height:22rem;color:#5a85cc}
 .income-page .income-summary{margin-top:13rem;padding:0 17rem}
