@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="402" height="874" viewBox="0 0 402 874">
+<defs><linearGradient id="blue" x2="1" y2="1"><stop stop-color="#0753f7"/><stop offset="1" stop-color="#1097f7"/></linearGradient><linearGradient id="icon" x2="1" y2="1"><stop stop-color="#58baff"/><stop offset="1" stop-color="#267cf4"/></linearGradient></defs>
+<rect width="402" height="874" fill="#f3f6f7"/><rect width="402" height="282" fill="url(#blue)"/>
+<circle cx="201" cy="120" r="39" fill="#ffffff30"/><circle cx="201" cy="108" r="12" fill="white"/><path d="M179 141c0-25 44-25 44 0" fill="white"/>
+<text x="201" y="177" text-anchor="middle" font-size="12" fill="#d6eeff" font-family="sans-serif">个税比赛演示</text>
+<g fill="url(#icon)"><rect x="47" y="293" width="42" height="40" rx="10"/><rect x="177" y="293" width="42" height="40" rx="10"/><rect x="306" y="293" width="42" height="40" rx="10"/></g>
+<g fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="62" cy="306" r="4"/><circle cx="75" cy="307" r="3"/><path d="M53 322v-3c0-10 18-10 18 0v3m2-9q10 0 10 9M187 321v-17h22v17zm5-17v-4h12v4m-17 7h22m-11-2v5M314 304h26v19h-26zm0 6h26m-21 7h6"/></g>
+<g fill="none" stroke="#278bf4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+<path d="M43 455l-9-10c-6-9 6-15 9-7 4-8 15-2 9 7z"/>
+<path d="M43 480l10 4v9c0 6-10 11-10 11s-10-5-10-11v-9zM38 490l4 4 6-7"/>
+<circle cx="43" cy="537" r="10"/><path d="M40 534c0-5 7-5 7-1 0 3-4 3-4 6m0 3v1"/>
+<path d="M34 573h19v15H43l-7 6v-6h-2zm4 5h11m-11 5h7"/>
+<circle cx="43" cy="629" r="10"/><path d="M43 628v7m0-12v1"/>
+</g></svg>

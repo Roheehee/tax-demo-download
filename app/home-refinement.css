@@ -1,0 +1,82 @@
+/* Home reference, measured on the supplied 1206 × 2622 screenshots at 1/3 scale.
+   Keep every service/card as its existing interactive element. */
+.phone > .scroll {
+  background-color: #f4f5f9;
+  background-image:
+    radial-gradient(ellipse 200rem 140rem at 50% -10rem, #7d9bf2 0, transparent 100%),
+    radial-gradient(ellipse 205rem 270rem at 50% 135rem, #4ba1f3 0, #4ba1f3 25%, transparent 100%),
+    linear-gradient(#207cf5 0, #3587f9 182rem, #a7cdf7 205rem, #edf2fc 227rem, #f4f5f9 242rem);
+  background-attachment: local;
+}
+.phone > .header .search-row { padding-top: 6rem; }
+.phone > .header .search { background: #ffffff66; }
+.phone > .header.solid { background: #267be1; }
+.phone > .scroll .section-title { margin-top: 48rem; }
+.phone > .scroll .tiles {
+  height: 153rem;
+  align-items: stretch;
+}
+.phone > .scroll .tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background: transparent;
+  isolation: isolate;
+  padding: 43rem 8rem 27rem;
+}
+.phone > .scroll .tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 108 153'%3E%3Cpath fill='white' d='M0 43Q0 25 17 28L94 39Q108 41 108 55V143Q108 153 98 153H10Q0 153 0 143Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+.phone > .scroll .tile h3 { flex: none; font-size: 14rem; line-height: 19rem; font-weight: 400; }
+.phone > .scroll .tile p { flex: none; font-size: 11rem; line-height: 14rem; color: #a0a2a1; }
+.phone > .scroll .tile .tag { height: 24rem; line-height: 18rem; }
+.phone > .scroll .article {
+  display: block;
+  background: transparent;
+  isolation: isolate;
+  color: #191d20;
+}
+.phone > .scroll .article::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 376 120'%3E%3Cpath fill='white' d='M18 0H320Q337 0 330 20L301 100Q295 120 277 120H18Q0 120 0 102V18Q0 0 18 0Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+.phone > .scroll .article h3 { font-weight: 400; }
+.phone > .scroll .article:nth-child(3)::before { transform: scaleX(-1); }
+.phone > .scroll .article:nth-child(3) .thumb {
+  background-position: -13rem -765rem;
+}
+.phone > .scroll .notice { padding-left: 6rem; gap: 14rem; }
+.phone > .scroll .notice .bell {
+  display: block;
+  flex: none;
+  width: 25rem;
+  height: 28rem;
+  background: url(assets/home-top.jpg) -19rem -134rem / 402rem 874rem no-repeat;
+}
+.phone > .scroll .notice .bell svg { display: none; }
+.phone > .scroll .tile-icon { left: 9rem; }
+/* Buttons otherwise vertically center their anonymous content box in WebKit. */
+.phone > .scroll .article {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.phone > .scroll .article h3 { font-size: 15rem; line-height: 21rem; }
+.phone > .scroll .article:nth-child(2) h3 { width: 195rem; }
+
+/* Final reference review: restore the larger announcement/category lettering. */
+.phone > .header .search { gap: 7rem; }
+.phone > .header .search input { padding: 0; font-size: 15.5rem; }
+.phone > .scroll .notice { font-size: 16rem; }
+.phone > .scroll .category { font-size: 15rem; }
+.phone > .scroll .category.active { font-size: 17rem; }
+.phone > .scroll .deduction { box-shadow: 0 7rem 14rem #67b8f585, 0 0 5rem #7bcefa55; }

@@ -1,0 +1,12 @@
+.editor-note{margin:16rem 20rem;color:#7b8792;font-size:13rem;line-height:21rem}.flow-body .edit-card{margin:13rem 16rem;padding:16rem;border-radius:9rem}.edit-card h2{font-size:16rem;margin:0 0 14rem;font-weight:600}.edit-card label{display:block;font-size:13rem;color:#65717f;margin-top:12rem}.edit-card input,.edit-card select{display:block;width:100%;height:39rem;background:#f6f8fb;border:1rem solid #e0e6ed;border-radius:5rem;padding:0 10rem;font-size:15rem;color:#232e3c;margin-top:5rem}.editor-footer{padding:8rem 0 18rem;background:white;flex:none}.editor-footer .flow-primary{margin-top:6rem}.editor-result{display:block;min-height:19rem;padding:0 20rem;color:#268bcb;font-size:13rem}
+
+.editor-toolbar .add-income{background:#e8f3ff;color:#2288df;width:100%;padding:12rem;margin-top:14rem;border-radius:7rem;font-size:15rem}.year-count{font-size:13rem;color:#7b8792;margin-bottom:0}.cancel-new{background:none;color:#8b9199;font-size:13rem;padding:12rem 0 0}.income-empty{padding:55rem 20rem;text-align:center;color:#9299a1;font-size:15rem}
+
+.editor-deductions{margin-top:18rem;border-top:1rem solid #edf0f4;padding-top:14rem}.editor-deductions summary{font-size:15rem;color:#2785d5;cursor:pointer}.editor-deductions p{font-size:12rem;line-height:19rem;color:#88929d;margin:10rem 0}.editor-deductions input[readonly]{background:#edf3fa;color:#6183a4}
+
+.editor-tax-record{margin-top:18rem;border-top:1rem solid #edf0f4;padding-top:14rem}
+.editor-tax-record summary{font-size:15rem;color:#2785d5;cursor:pointer}
+.editor-tax-record p{font-size:12rem;line-height:19rem;color:#88929d;margin:10rem 0}
+.editor-tax-record textarea{display:block;width:100%;min-height:66rem;resize:vertical;background:#f6f8fb;border:1rem solid #e0e6ed;border-radius:5rem;padding:9rem 10rem;font-family:inherit;font-size:15rem;line-height:21rem;color:#232e3c;margin-top:5rem}
+.editor-tax-record input[type="date"]{min-width:0;-webkit-appearance:none;appearance:none}
+.editor-tax-record input:focus-visible,.editor-tax-record textarea:focus-visible{outline:2rem solid #94bff0;outline-offset:2rem}

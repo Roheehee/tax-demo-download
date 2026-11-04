@@ -1,0 +1,30 @@
+/* Shared navigation: the selected icon keeps white foreground marks. */
+.nav .nav-glyph{width:23rem;height:23rem;stroke-width:1.8}
+.nav button.active .nav-outline{fill:#009ff4;stroke:#009ff4}
+.nav button.active .nav-detail{stroke:#fff;stroke-width:1.8}
+.nav button.active{color:#0098ed}
+.nav .nav-badge{font-weight:400;line-height:16rem;font-size:11rem}
+.date{display:flex;align-items:center;gap:4rem}
+.date-clock{width:13rem;height:13rem;flex:none}
+/* Latest recording supplies the header artwork; personal information stays live. */
+.profile .tab-top{position:relative;background-image:url(assets/profile-latest.svg?v=8)}
+.profile .tab-top .status{position:relative;isolation:isolate;background:none;height:52rem}
+/* Extend a clean strip over the recorded system bar, excluding its recording island. */
+.profile .tab-top .status:before{content:'';position:absolute;z-index:-1;left:0;top:0;width:100%;height:3rem;background:url(assets/profile-latest.svg?v=8) 0 -52rem/402rem 874rem no-repeat;transform:scaleY(17.333333);transform-origin:top left}
+.profile .profile-wifi{width:18rem;height:16rem}
+.profile-info-surface{position:absolute;top:189rem;left:23rem;right:23rem;height:100rem;border-radius:14rem 14rem 0 0;background:linear-gradient(98deg,#fbe4ce,#ecc196)}
+.profile-name{position:absolute;left:49rem;top:211rem;font-size:15rem;line-height:21rem;font-weight:600;color:#1c1e1f}
+.profile .personal-hit{top:210rem;right:23rem;width:85rem;height:25rem;display:flex;align-items:center;justify-content:center;gap:5rem;border-radius:16rem 0 0 16rem;background:linear-gradient(100deg,#eeb978,#e59b47);font-size:13rem;font-weight:400;color:#fff6e8}
+.personal-hit i{width:7rem;height:7rem;border-top:1.5rem solid;border-right:1.5rem solid;transform:rotate(45deg)}
+.profile-identity{top:234rem;left:49rem;width:244rem;height:23rem;gap:4rem;font-size:13rem;background:none;color:#c68b43}
+.identity-number{font-size:13.5rem;flex:initial;letter-spacing:.2rem}
+.identity-eye{margin-left:5rem;width:24rem;height:28rem}
+.identity-eye svg{width:18rem;height:18rem;stroke-width:1.5}
+.profile .profile-card{border-radius:9rem;padding-top:12rem}
+.profile .profile-card h3{font-size:15rem;line-height:21rem;font-weight:600;margin:9rem 0 10rem}
+.profile .profile-chip{font-size:13rem;line-height:18rem;font-weight:400;padding:0 9rem}
+.profile-menu{padding:10rem 19rem 9rem}
+.profile-menu button{font-size:15rem;line-height:23rem;gap:14rem;font-weight:400;color:#1e2023}
+.profile-menu .chevron{font-size:0;width:8rem;height:8rem;border-top:1.8rem solid;border-right:1.8rem solid;transform:rotate(45deg);margin-right:1rem}
+.profile .logout{height:54rem;font-size:16rem;font-weight:500;line-height:24rem;margin-top:13rem}
+.profile .tab-body,.profile{background:#f3f6f7}

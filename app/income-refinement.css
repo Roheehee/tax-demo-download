@@ -1,0 +1,68 @@
+/* Income pages: 402-point geometry checked against the supplied recordings. */
+.income-summary{padding-top:2rem;padding-bottom:5rem}
+.income-summary .total-line{height:42rem}
+.income-record .record-line{font-size:16rem;line-height:28rem;padding-right:78rem}
+
+/* The newer detail recording shares the 112-point header of the query page. */
+.income-detail-flow .flow-status .status,
+.tax-calculation-flow .flow-status .status{height:62rem}
+.income-detail-flow .flow-heading,
+.tax-calculation-flow .flow-heading{
+ display:flex;align-items:center;gap:9rem;height:48rem;
+ padding:0 17rem;margin-bottom:7rem;font-size:16rem;line-height:23rem;
+}
+.income-detail-flow .flow-heading:before,
+.tax-calculation-flow .flow-heading:before{
+ flex:none;width:4rem;height:17rem;margin:0;border-radius:3rem;
+}
+.income-detail-flow .flow-row,
+.tax-calculation-flow .flow-row{padding-top:6rem;padding-bottom:6rem;line-height:23rem}
+.income-detail-flow .flow-row label,
+.tax-calculation-flow .flow-row label{font-size:16rem}
+.tax-calculation-flow .flow-body{padding-bottom:84rem}
+.tax-calculation-flow .policy-explanation{margin:24rem auto 32rem}
+
+/* Base information keeps its narrow label column; period totals have more room. */
+.income-detail-flow .flow-body>section:last-child>.flow-row{padding-right:37rem}
+.income-detail-flow .flow-body>section:last-child>.flow-row label{flex-basis:182rem}
+.income-detail-flow .deduction-breakdown .flow-row{
+ padding:12.5rem 22rem 12.5rem 17rem;line-height:23rem;
+}
+
+/* Verification, employer and bank screens retain the older recording's header. */
+.phone-verification-flow .phone-intro{padding:34rem 20rem;line-height:21.5rem}
+.phone-verification-flow .phone-intro strong{font-size:30rem;line-height:38rem}
+.phone-verification-flow .code-row>span{flex:0 0 94rem;white-space:nowrap}
+.phone-verification-flow .code-row input{flex:none;width:137rem;height:24rem;padding:0;line-height:24rem}
+.phone-verification-flow .code-row button{flex:0 0 113rem;width:113rem;height:24rem;padding:0 0 0 26rem;font-size:17rem;line-height:24rem}
+.employment-flow .employer-card{padding:19rem 22rem 12rem}
+.employment-flow .employer-card h2{font-size:18rem;line-height:24rem}
+.employment-flow .employer-card p:first-of-type{word-break:break-all}
+.bank-flow .bank-card{height:86rem;margin-top:34rem;padding:16rem 17rem}
+.bank-flow .bank-card>div:last-child{display:flex;flex-direction:column;gap:4rem}
+.bank-flow .bank-card p{margin:0;font-size:16rem;line-height:22rem}
+.bank-flow .bank-card p:first-child{font-size:18rem;line-height:24rem}
+.bank-flow .bank-logo{background-position:-34rem -166rem}
+.bank-flow .bank-footer{padding-bottom:36rem}
+.bank-flow .bank-footer .flow-primary{width:332rem;max-width:100%}
+
+/* The recording uses a bottom wheel; choosing a row is a draft until confirmed. */
+.income-query-flow .query-year-picker{
+ position:absolute;inset:0;width:100%;padding:0 40rem 0 145rem;
+ border:0;background:transparent;text-align:left;color:#333;font-size:18rem;
+}
+.income-query-flow .query-year-picker:focus-visible{outline:2rem solid #a5ceff;outline-offset:-3rem}
+.year-picker-overlay{position:absolute;inset:0;z-index:5;background:#0008;display:flex;align-items:flex-end}
+.year-picker-panel{width:100%;height:370rem;max-height:80%;background:#fff;border-radius:11rem 11rem 0 0;overflow:hidden;display:flex;flex-direction:column;animation:year-picker-in .2s ease-out}
+.year-picker-toolbar{height:46rem;flex:none;display:flex;align-items:center;justify-content:space-between;border-bottom:1rem solid #eee;padding:0 16rem}
+.year-picker-toolbar button{height:100%;padding:0;background:none;font-size:16rem;color:#5794bf}
+.year-picker-toolbar .year-picker-cancel{color:#999}
+.year-wheel-container{height:324rem;min-height:0;flex:1;position:relative;--year-row:44rem}
+.year-wheel{height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;scroll-snap-type:y mandatory;padding-block:138rem;-webkit-mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 30%,#000 70%,transparent)}
+.year-wheel::-webkit-scrollbar{display:none}
+.year-option{display:block;width:100%;height:var(--year-row);min-height:var(--year-row);scroll-snap-align:center;border:0;padding:0;background:none;text-align:center;font-size:18rem;line-height:var(--year-row);color:#bbb}
+.year-option[aria-selected="true"]{color:#333}
+.year-option:focus-visible{outline:2rem solid #9ec4ee;outline-offset:-3rem}
+.year-selection-window{position:absolute;left:0;right:0;top:138rem;height:var(--year-row);border-top:1rem solid #e9e9e9;border-bottom:1rem solid #e9e9e9;pointer-events:none}
+@keyframes year-picker-in{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.year-picker-panel{animation:none}}

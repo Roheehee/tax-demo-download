@@ -1,0 +1,37 @@
+/* Native iPhone text metrics; rem is the existing 402-point design unit. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit;letter-spacing:normal}
+.income-bar h1{font-size:18rem;line-height:25rem;font-weight:400;letter-spacing:0}
+.income-bar button{font-size:17rem;line-height:24rem;font-weight:400}
+.record-heading{font-size:18rem;line-height:25rem;font-weight:400}
+.record-line{font-size:15rem;line-height:28rem;font-weight:400;color:#a1a4a4}
+.total-line,.flow-row span{font-variant-numeric:lining-nums tabular-nums}
+.income-detail-flow .flow-row,.tax-calculation-flow .flow-row{font-size:16rem;line-height:23rem;font-weight:400}
+.income-detail-flow .flow-row label,.tax-calculation-flow .flow-row label{font-size:15.5rem}
+.income-detail-flow .flow-heading,.tax-calculation-flow .flow-heading{font-weight:600;line-height:21rem}
+.flow-note{font-weight:400;letter-spacing:0}
+/* Query reference: header 112, first section 98, row 54, footer 52. */
+.income-query-flow{background:#f5f6fa;color:#303333}
+.income-query-flow .flow-status .status{height:62rem}
+.income-query-flow .flow-body{padding-bottom:32rem;background:#f5f6fa}
+.income-query-flow .flow-body section{margin:12rem 0 0;background:#fff}
+.income-query-flow .flow-heading{height:48rem;display:flex;align-items:center;padding:0 17rem;margin:0;gap:9rem;border-bottom:1rem solid #ededed;font-size:16rem;line-height:23rem;font-weight:600}
+.income-query-flow .flow-heading:before{flex:none;height:17rem;width:4rem;margin:0;border-radius:3rem;background:#448cf1}
+.income-query-flow .query-year{height:50rem;padding:0 17rem;font-size:18rem;line-height:25rem;color:#666}
+.income-query-flow .query-year select{font:inherit;color:#333;padding-left:145rem;padding-right:40rem}
+.income-query-flow .query-chevron{width:8rem;height:8rem;border-width:1.5rem;color:#d4d6d7;pointer-events:none}
+.income-query-flow .query-types{padding:0;display:block}
+.income-query-flow .query-types label{position:relative;height:54rem;min-height:54rem;padding:0 17rem;gap:20rem;border:0;font-size:18rem;line-height:25rem;font-weight:400}
+.income-query-flow .query-types label:after{content:'';position:absolute;left:17rem;right:0;bottom:0;height:1rem;background:#eee}
+.income-query-flow .query-types label:last-child:after{left:0}
+.income-query-flow .query-types input{width:24rem;height:24rem;border:1rem solid #d5d7d8}
+.income-query-flow .query-types input:checked{background:#4289ef;border-color:#4289ef}
+.income-query-flow .query-types input:checked:after{left:8rem;top:5rem;width:6rem;height:10rem;border-width:0 1.2rem 1.2rem 0}
+.income-query-flow .query-types input:focus-visible{outline:2rem solid #a5ceff;outline-offset:3rem}
+.income-query-flow .query-more{height:52rem;border-top:1rem solid #eee;gap:8rem;font-size:16rem;line-height:23rem;color:#4c96cb}
+.income-query-flow .double-chevron{width:10rem;height:10rem;flex:none;border-width:1.2rem;margin-top:-7rem}
+.income-query-flow .double-chevron:after{inset:4rem -5rem -5rem 4rem;border-width:1.2rem}
+.income-query-flow .query-more[aria-expanded="true"] .double-chevron{margin-top:6rem}
+.income-query-flow .query-submit{margin:34rem 20rem 0;width:calc(100% - 40rem);height:50rem;line-height:25rem;font-size:18rem;font-weight:400;border-radius:4rem;background:#3f83ef;color:#fff}
+.income-query-flow .query-submit:disabled{background:#c5dcf7}
