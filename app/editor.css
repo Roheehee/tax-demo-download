@@ -10,3 +10,5 @@
 .editor-tax-record textarea{display:block;width:100%;min-height:66rem;resize:vertical;background:#f6f8fb;border:1rem solid #e0e6ed;border-radius:5rem;padding:9rem 10rem;font-family:inherit;font-size:15rem;line-height:21rem;color:#232e3c;margin-top:5rem}
 .editor-tax-record input[type="date"]{min-width:0;-webkit-appearance:none;appearance:none}
 .editor-tax-record input:focus-visible,.editor-tax-record textarea:focus-visible{outline:2rem solid #94bff0;outline-offset:2rem}
+
+.editor-toolbar .load-income{background:#eef3f9;color:#2475c7;width:100%;padding:12rem;margin-top:10rem;border-radius:7rem;font-size:15rem}.income-summary-editor[hidden]{display:none}.income-summary-editor .editor-note{margin:8rem 0;padding:0}

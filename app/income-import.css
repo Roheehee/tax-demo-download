@@ -1,0 +1,4 @@
+.income-import-dialog textarea{display:block;width:100%;min-height:82px;margin:6px 0 12px;padding:10px;border:1px solid #ced9e4;border-radius:7px;background:#fff;font:13px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:#33475d;overflow-wrap:anywhere;resize:vertical}
+.income-import-dialog .income-preset-review pre{font-size:13px;line-height:1.7}
+.income-import-dialog .income-preset-replace{font-weight:500;color:#33475d}
+.income-import-dialog button:disabled{opacity:.5}

@@ -1,9 +1,12 @@
 'use strict';
-const VERSION = 'v24-query-inset-20261106';
+const VERSION = 'v25-income-import-20261106';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
 const FILES = [
+  "income-preset.js",
+  "income-import-ui.js",
+  "income-import.css",
   "profile-calibration.css",
   "assets/profile-ui/arrow.png",
   "assets/profile-ui/hero.png",
