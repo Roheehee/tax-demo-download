@@ -1,9 +1,10 @@
 'use strict';
-const VERSION = 'v18-content-20261105';
+const VERSION = 'v19-shell-20261105';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
 const FILES = [
+  "app-shell.css",
   "assets/bank-reference.svg",
   "assets/home-scroll.jpg",
   "assets/home-top.jpg",

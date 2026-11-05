@@ -1,0 +1,58 @@
+/* Shared content canvas. The device owns the system status indicators. */
+.phone{
+ --safe-top:env(safe-area-inset-top,0px);
+ --safe-bottom:env(safe-area-inset-bottom,0px);
+ --app-bar:52.333333rem;
+ --app-bar-pad:5.333333rem;
+ height:100dvh;max-height:none;
+}
+.phone .status,.phone .income-status,.phone .flow-status{display:none}
+.phone>.header,.phone>.tab-page>.tab-top,.phone>.income-page,.phone>.flow-page{padding-top:var(--safe-top)}
+.phone>.income-page,.phone>.flow-page{min-height:0}
+.phone .income-bar{height:var(--app-bar);padding-top:var(--app-bar-pad);flex:none}
+.phone .income-bar h1{font-size:17rem;line-height:24rem;font-weight:400}
+.phone .income-bar button{font-size:15rem;line-height:22rem}
+.phone .income-scroll,.phone .flow-body{min-height:0}
+
+/* Home search and tab headings use the same content-header height. */
+.phone>.header{height:calc(var(--safe-top) + var(--app-bar))}
+.phone>.header .search-row{height:var(--app-bar);padding-top:var(--app-bar-pad);padding-bottom:0}
+.phone>.scroll{padding-top:calc(var(--safe-top) + var(--app-bar) + 13rem);padding-bottom:calc(100rem + var(--safe-bottom))}
+.phone>.tab-page.current{display:flex;flex-direction:column}
+.phone>.tab-page>.tab-top{height:auto;flex:none}
+.phone>.tab-page .tab-heading{height:var(--app-bar);padding-top:var(--app-bar-pad);margin-top:0;flex:none}
+.phone>.tab-page .tab-heading h1{transform:none}
+.phone>.tab-page>.tab-body{position:relative;top:auto;bottom:auto;flex:1;min-height:0;padding-bottom:calc(100rem + var(--safe-bottom))}
+
+/* Profile artwork is a 402-point sprite: crop only its old 52-point status strip. */
+.phone>.profile>.tab-top{
+ height:calc(230rem + var(--safe-top));
+ background-color:#1685f7;background-position:0 -52rem;
+ background-origin:content-box;background-clip:content-box;
+}
+.phone>.profile>.tab-top:before{content:'';position:absolute;inset:0 0 auto;height:var(--safe-top);background:#1685f7}
+.phone>.profile>.tab-body{margin-top:-14rem}
+.phone .profile-info-surface{top:calc(137rem + var(--safe-top))}
+.phone .profile-name{top:calc(159rem + var(--safe-top))}
+.phone .profile .personal-hit{top:calc(158rem + var(--safe-top))}
+.phone .profile-identity{top:calc(182rem + var(--safe-top))}
+
+/* Keep controls above the real home indicator without a second mock footer. */
+.phone>.nav{bottom:calc(22rem + var(--safe-bottom))}
+.phone .income-scroll{padding-bottom:calc(25rem + var(--safe-bottom))}
+.phone .flow-body{padding-bottom:calc(34rem + var(--safe-bottom))}
+.phone .tax-calculation-flow .flow-body{padding-bottom:calc(84rem + var(--safe-bottom))}
+.phone .editor-footer{padding-bottom:calc(18rem + var(--safe-bottom))}
+.phone .bank-footer{padding-bottom:calc(36rem + var(--safe-bottom))}
+.phone .flow-page:has(>footer)>.flow-body{padding-bottom:34rem}
+.phone .sheet{padding-bottom:calc(35rem + var(--safe-bottom));max-height:calc(100% - var(--safe-top));overflow:auto}
+.phone .year-picker-panel{margin-bottom:var(--safe-bottom)}
+
+/* Document zoom follows the real header instead of the former 112-point shell. */
+.phone .tax-document-zoom{top:calc(var(--safe-top) + var(--app-bar));bottom:var(--safe-bottom)}
+.phone .tax-document-zoom>img{top:50%}
+.phone .tax-zoom-demo.tax-single-page{transform:none}
+.phone .tax-document-flow .tax-document-close{top:var(--app-bar-pad);height:calc(var(--app-bar) - var(--app-bar-pad))}
+
+/* This native dialog lives under body, outside the rem-based phone canvas. */
+.data-backup-dialog{inset:calc(16px + env(safe-area-inset-top,0px)) 0 calc(16px + env(safe-area-inset-bottom,0px));max-height:calc(100dvh - 32px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
