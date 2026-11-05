@@ -8,6 +8,8 @@
 }
 .phone .status,.phone .income-status,.phone .flow-status{display:none}
 .phone>.header,.phone>.tab-page>.tab-top,.phone>.income-page,.phone>.flow-page{padding-top:var(--safe-top)}
+/* Extra clearance for the income query header; keep the real device inset. */
+.phone>.income-query-flow{padding-top:calc(var(--safe-top) + 8px)}
 .phone>.income-page,.phone>.flow-page{min-height:0}
 .phone .income-bar{height:var(--app-bar);padding-top:var(--app-bar-pad);flex:none}
 .phone .income-bar h1{font-size:17rem;line-height:24rem;font-weight:400}
