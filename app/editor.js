@@ -1,16 +1,20 @@
-// Competition demo data, stored only in this browser/device.
+// Competition demo: user edits stay in this browser/device.
 const demoStorageKey='tax-replica-income-v1';
 const demoDefaults=[...incomeRows,...moreRows,{type:'劳务报酬',month:'2026-03',category:'其他连续劳务报酬',company:'示例服务有限公司',income:'',tax:''}].map((r,i)=>({...r,id:i,company:r.type==='工资薪金'?'示例科技有限公司':'示例服务有限公司'}));
-let demoRecords=structuredClone(demoDefaults);
+// Preserve legacy defaults only for matching previously saved reference details.
+const builtInIncome=typeof TaxIncomeDefaults!=='undefined'&&typeof TaxIncomePreset!=='undefined'
+ ? TaxIncomePreset.prepareImport([],{},TaxIncomeDefaults.create()):null;
+let usingBuiltInIncome=Boolean(builtInIncome);
+let demoRecords=structuredClone(builtInIncome?builtInIncome.records:demoDefaults);
 // Keep the original storage key and IDs so previously saved edits remain available.
 function validDemoRecord(r){return r&&['string','number'].includes(typeof r.id)&&/^\d{4}-(0[1-9]|1[0-2])$/.test(r.month)&&['type','category','company'].every(k=>typeof r[k]==='string')&&['income','tax'].every(k=>r[k]===''||/^\d+(\.\d{1,2})?$/.test(r[k]));}
-try{const saved=JSON.parse(localStorage.getItem(demoStorageKey));if(Array.isArray(saved)&&saved.every(validDemoRecord)&&new Set(saved.map(r=>String(r.id))).size===saved.length)demoRecords=saved;}catch{}
+try{const saved=JSON.parse(localStorage.getItem(demoStorageKey));if(Array.isArray(saved)&&saved.every(validDemoRecord)&&new Set(saved.map(r=>String(r.id))).size===saved.length){demoRecords=saved;usingBuiltInIncome=false;}}catch{}
 const demoTypes=['工资薪金','劳务报酬','稿酬','特许权使用费','经营所得','利息、股息、红利','财产租赁','财产转让','偶然所得'];
 let incomeQueryYear='2026';
 let incomeQueryTypes=demoTypes.slice(0,4);
 try{
  const preferred=JSON.parse(localStorage.getItem(profileIdentityKey)||'null')?.incomePreferredQuery;
- if(preferred&&/^[1-9]\d{3}$/.test(preferred.year)&&Array.isArray(preferred.types)&&preferred.types.length&&preferred.types.every(t=>demoTypes.includes(t))){incomeQueryYear=preferred.year;incomeQueryTypes=[...new Set(preferred.types)];}
+ if(!usingBuiltInIncome&&preferred&&/^[1-9]\d{3}$/.test(preferred.year)&&Array.isArray(preferred.types)&&preferred.types.length&&preferred.types.every(t=>demoTypes.includes(t))){incomeQueryYear=preferred.year;incomeQueryTypes=[...new Set(preferred.types)];}
 }catch{}
 function filteredDemoRecords(){return demoRecords.filter(r=>r.month.startsWith(incomeQueryYear+'-')&&incomeQueryTypes.includes(r.type)).sort((a,b)=>b.month.localeCompare(a.month));}
 function demoYearTotal(key){
@@ -60,11 +64,17 @@ function recordTaxData(r){
  return Object.fromEntries(taxRecordFields.map(([key])=>[key,String(stored[key]??'')]));
 }
 function taxpayerProfileData(){
+ let profile={name:'演示用户',identity:typeof profileIdentity==='string'?profileIdentity:''};
  try{
   const saved=JSON.parse(localStorage.getItem(profileIdentityKey));
-  if(saved&&typeof saved==='object'&&!Array.isArray(saved))return {...saved,name:typeof saved.name==='string'?saved.name:'',identity:typeof saved.identity==='string'?saved.identity:''};
+  if(saved&&typeof saved==='object'&&!Array.isArray(saved))profile={...saved,name:typeof saved.name==='string'?saved.name:'',identity:typeof saved.identity==='string'?saved.identity:''};
  }catch{}
- return {name:'演示用户',identity:typeof profileIdentity==='string'?profileIdentity:''};
+ if(usingBuiltInIncome){
+  profile.incomeSummaryRemainders={...TaxIncomePreset.normalizeRemainders(profile),...structuredClone(builtInIncome.profile.incomeSummaryRemainders)};
+  profile.incomePreferredQuery={year:builtInIncome.summary.year,types:[...TaxIncomePreset.TYPES.slice(0,4)]};
+  profile.taxDocumentEdited=true;
+ }
+ return profile;
 }
 function validTaxRecordDate(value){
  if(value==='')return true;
@@ -84,7 +94,7 @@ function taxRecordEditor(r){
 function persistDemoEditorData(records,profile){
  const payloads=[[demoStorageKey,JSON.stringify(records)],[profileIdentityKey,JSON.stringify(profile)]];
  const originals=payloads.map(([key])=>[key,localStorage.getItem(key)]);
- try{for(const [key,value] of payloads)localStorage.setItem(key,value);}
+ try{for(const [key,value] of payloads)localStorage.setItem(key,value);usingBuiltInIncome=false;}
  catch{
   let restored=true;
   for(const [key,value] of originals.slice().reverse()){
@@ -120,7 +130,7 @@ function showDemoEditor(){
  const summaryDraft=window.TaxIncomePreset?TaxIncomePreset.normalizeRemainders(profile):{};
  const recordYears=new Map(draft.map(r=>[r.id,r.month.slice(0,4)]));
  const years=[...new Set(['2026','2025',year,...Object.keys(summaryDraft),...draft.map(r=>r.month.slice(0,4))])].sort().reverse();
- showFlow('修改演示数据',`<p class="editor-note">比赛演示数据 · 初始记录为合成示例 · 仅保存到当前设备<br>按年度编辑，可为同一月份添加多条记录。</p><form id="demo-editor"><section class="edit-card"><h2>我的 · 纳税人信息</h2><label>纳税人姓名<input name="profile-name" type="text" autocomplete="off" maxlength="80" placeholder="填写演示姓名" value="${htmlEscape(profile.name)}"></label><label>演示号码<input name="profile-identity" type="text" autocomplete="off" maxlength="18" placeholder="填写15位或18位演示号码" value="${htmlEscape(profileIdentity)}"></label></section><section class="edit-card editor-toolbar"><label>编辑年度<select name="editor-year">${years.map(y=>`<option ${y===year?'selected':''}>${y}</option>`).join('')}</select></label><button type="button" class="add-income">＋ 新增收入记录</button><button type="button" class="load-income">载入收入数据</button><p class="year-count" role="status"></p></section><section class="edit-card income-summary-editor" hidden></section><div class="editor-records"></div><p class="editor-note">切换年份会保留尚未保存的填写内容。点击“保存修改”同时保存所有年份；收入明细按查询年份显示。合计汇总当前查询条件下的记录；如有未展开明细合计，也会按其适用类型计入。</p><p class="editor-note">保存后，已有申请的预览、放大和再次下载也使用最新数据；已下载的旧图片需重新下载。</p></form>`,'<footer class="editor-footer"><span class="editor-result" role="status"></span><button class="flow-primary" type="submit" form="demo-editor">保存修改</button></footer>');
+ showFlow('修改演示数据',`<p class="editor-note">比赛演示数据 · 默认载入已选收入数据 · 修改仅保存到当前设备<br>按年度编辑，可为同一月份添加多条记录。</p><form id="demo-editor"><section class="edit-card"><h2>我的 · 纳税人信息</h2><label>纳税人姓名<input name="profile-name" type="text" autocomplete="off" maxlength="80" placeholder="填写演示姓名" value="${htmlEscape(profile.name)}"></label><label>演示号码<input name="profile-identity" type="text" autocomplete="off" maxlength="18" placeholder="填写15位或18位演示号码" value="${htmlEscape(profileIdentity)}"></label></section><section class="edit-card editor-toolbar"><label>编辑年度<select name="editor-year">${years.map(y=>`<option ${y===year?'selected':''}>${y}</option>`).join('')}</select></label><button type="button" class="add-income">＋ 新增收入记录</button><button type="button" class="load-income">载入收入数据</button><p class="year-count" role="status"></p></section><section class="edit-card income-summary-editor" hidden></section><div class="editor-records"></div><p class="editor-note">切换年份会保留尚未保存的填写内容。点击“保存修改”同时保存所有年份；收入明细按查询年份显示。合计汇总当前查询条件下的记录；如有未展开明细合计，也会按其适用类型计入。</p><p class="editor-note">保存后，已有申请的预览、放大和再次下载也使用最新数据；已下载的旧图片需重新下载。</p></form>`,'<footer class="editor-footer"><span class="editor-result" role="status"></span><button class="flow-primary" type="submit" form="demo-editor">保存修改</button></footer>');
  const form=flowPage.querySelector('form'),records=form.querySelector('.editor-records'),result=flowPage.querySelector('.editor-result');
  const collect=()=>{if(summaryDraft[year]){summaryDraft[year].income=form.elements['summary-income'].value.trim();summaryDraft[year].tax=form.elements['summary-tax'].value.trim();}for(const card of records.querySelectorAll('[data-record-id]')){const r=draft.find(r=>String(r.id)===card.dataset.recordId);for(const k of ['month','type','category','company','income','tax'])r[k]=card.querySelector(`[name="${k}"]`).value.trim();r.deductions=Object.fromEntries(deductionFields.map(([key])=>[key,card.querySelector(`[name="deduction-${key}"]`).value.trim()]));r.deductions=recordDeductions(r);r.taxRecord={...r.taxRecord,...Object.fromEntries(taxRecordFields.map(([key])=>[key,card.querySelector(`[name="tax-record-${key}"]`).value.trim()]))};}};
  function render(){
