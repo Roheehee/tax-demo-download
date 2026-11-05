@@ -18,7 +18,9 @@
  appearance:none;-webkit-appearance:none;display:inline-flex;align-items:center;
  justify-content:center;flex:none;width:14rem;height:14rem;padding:0;
  margin-left:6.5rem;margin-right:2rem;border:0;border-radius:50%;
- background:transparent;color:#6887ab;box-shadow:inset 0 0 0 .75rem currentColor;transform:translateY(.833333rem);
+ background:transparent;color:#3d7ac9;box-shadow:inset 0 0 0 .75rem #4e89cc;transform:translateY(.833333rem);
+ /* Match the ring and the thin glyph separately after antialiasing on white. */
+ -webkit-text-stroke:.12rem currentColor;
  font-family:"Helvetica Neue",Arial,sans-serif;font-size:12rem;font-weight:300;line-height:1;
 }
 .income-page .income-help:focus-visible{outline:2rem solid #a5ceff;outline-offset:3rem}
