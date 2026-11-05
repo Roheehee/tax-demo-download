@@ -1,0 +1,60 @@
+/* Profile content measured at 402 points after excluding the 52-point system bar. */
+.phone>.profile>.tab-top{
+ height:calc(226.666667rem + var(--safe-top));
+ background-color:#077afa;
+ background-image:url(assets/profile-ui/hero.png),url(assets/profile-ui/hero-left.png),url(assets/profile-ui/hero-right.png);
+ background-size:402rem 135.666667rem,23rem 91rem,23rem 91rem;
+ background-position:center top,left bottom,right bottom;background-repeat:no-repeat;
+}
+.phone>.profile>.tab-top:before{background:linear-gradient(100deg,#0251fe,#057fff 50%,#88beff)}
+.phone .profile-info-surface{
+ top:calc(135.666667rem + var(--safe-top));height:100rem;
+ background:linear-gradient(90deg,#fde6d0,#f5d5b7 50%,#edc69b);
+}
+.phone .profile-name{top:calc(158rem + var(--safe-top));font-size:14rem;line-height:21rem;font-weight:600;color:#1e1e20}
+.phone .profile .personal-hit{
+ top:calc(157rem + var(--safe-top));width:81.333333rem;height:24rem;
+ font-size:12rem;line-height:18rem;gap:5rem;
+ background:linear-gradient(100deg,#efb471,#e68e34);color:#fff9ed;
+}
+.phone .profile-identity{top:calc(178.333333rem + var(--safe-top));font-size:12rem;line-height:19rem;gap:4rem;color:#b57f4a;font-weight:500}
+.phone .identity-eye{margin-left:9rem;color:#d38f49}
+.phone .identity-eye svg{width:21rem;height:21rem}
+.phone .identity-number{font-size:12.5rem;font-weight:500;letter-spacing:.2rem}
+.phone .profile>.tab-body{
+ margin-top:-14rem;padding:12.333333rem 13rem calc(100rem + var(--safe-bottom));
+ background:#f4f5f9;border-radius:23rem 23rem 0 0;scrollbar-width:none;
+}
+.phone .profile>.tab-body::-webkit-scrollbar{display:none}
+.phone>.profile{background:#f4f5f9}
+.profile .profile-cards{gap:13rem}
+.profile .profile-card{height:118.666667rem;padding:13rem 0 8rem;border-radius:9rem;color:#1e1e20}
+.profile .profile-card .sprite-icon{
+ width:47rem;height:40rem;flex:none;background-size:47rem 40rem;background-position:0 0!important;
+}
+.profile .profile-card:nth-child(1) .sprite-icon{background-image:url(assets/profile-ui/family.png)!important}
+.profile .profile-card:nth-child(2) .sprite-icon{background-image:url(assets/profile-ui/employment.png)!important}
+.profile .profile-card:nth-child(3) .sprite-icon{background-image:url(assets/profile-ui/bank.png)!important}
+.profile .profile-card h3{font-size:14rem;line-height:20rem;font-weight:600;margin:6.666667rem 0 9rem}
+.profile .profile-chip{height:19rem;line-height:17rem;font-size:12rem;padding:0 9rem;border:1rem solid #3d80cb;border-radius:11rem;background:#fff;color:#417fc6}
+.profile .profile-card:first-child .profile-chip{border-color:#3d80cb;color:#417fc6}
+.profile .profile-card:last-child .profile-chip{background:linear-gradient(135deg,#319bff,#4675f8);border-color:#4189df;color:#fff}
+.profile .profile-menu{margin-top:13rem;padding:9.333333rem 19rem 8.333333rem 17rem;border-radius:10rem}
+.profile .profile-menu button{height:46rem;padding:0;gap:11rem;font-size:14rem;line-height:23rem;font-weight:500;color:#1e1e20}
+.profile .profile-menu .menu-icon{
+ flex:none;width:28rem;height:26rem!important;
+ background-size:28rem 26rem!important;background-position:0 0!important;background-repeat:no-repeat!important;
+}
+.profile .profile-menu button:nth-child(1) .menu-icon{background-image:url(assets/profile-ui/care.png)!important}
+.profile .profile-menu button:nth-child(2) .menu-icon{background-image:url(assets/profile-ui/security.png)!important}
+.profile .profile-menu button:nth-child(3) .menu-icon{background-image:url(assets/profile-ui/help.png)!important}
+.profile .profile-menu button:nth-child(4) .menu-icon{background-image:url(assets/profile-ui/support.png)!important}
+.profile .profile-menu button:nth-child(5) .menu-icon{background-image:url(assets/profile-ui/about.png)!important}
+.profile .profile-menu .chevron{flex:none;width:10rem;height:15rem;border:0;margin-right:-2rem;transform:translateY(-2.833333rem);background:url(assets/profile-ui/arrow.png) center/10rem 15rem no-repeat}
+.profile .logout{height:54rem;margin-top:13rem;font-size:15rem;font-weight:500;line-height:24rem;color:#3d7cd7}
+/* Keep the other tabs' navigation unchanged; match this supplied profile view. */
+.phone[data-active-tab="profile"]>.nav{height:64.333333rem;bottom:calc(21.333333rem + var(--safe-bottom));padding:8rem 22.2rem 7rem;background:#fdfdfe;box-shadow:0 4rem 15rem #6670781a}
+.phone[data-active-tab="profile"]>.nav button{padding-top:3.333333rem;font-size:11rem;line-height:14rem;gap:4rem;color:#303031}
+.phone[data-active-tab="profile"]>.nav .nav-glyph{width:24.5rem;height:24.5rem;stroke-width:1.8}
+.phone[data-active-tab="profile"]>.nav button.active{color:#008dfc}
+.phone[data-active-tab="profile"]>.nav button.active .nav-outline{fill:#008dfc;stroke:#008dfc}

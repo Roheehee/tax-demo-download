@@ -1,9 +1,22 @@
 'use strict';
-const VERSION = 'v21-help-color-20261106';
+const VERSION = 'v22-profile-20261106';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
 const FILES = [
+  "profile-calibration.css",
+  "assets/profile-ui/arrow.png",
+  "assets/profile-ui/hero.png",
+  "assets/profile-ui/hero-left.png",
+  "assets/profile-ui/hero-right.png",
+  "assets/profile-ui/family.png",
+  "assets/profile-ui/employment.png",
+  "assets/profile-ui/bank.png",
+  "assets/profile-ui/care.png",
+  "assets/profile-ui/security.png",
+  "assets/profile-ui/help.png",
+  "assets/profile-ui/support.png",
+  "assets/profile-ui/about.png",
   "app-shell.css",
   "assets/bank-reference.svg",
   "assets/home-scroll.jpg",
