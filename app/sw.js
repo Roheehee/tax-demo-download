@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v31-income-top-spacing-20261107';
+const VERSION = 'v32-safe-area-shell-20261107';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
