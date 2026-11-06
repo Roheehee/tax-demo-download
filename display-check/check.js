@@ -18,7 +18,7 @@
   const safe = getComputedStyle(document.getElementById('safe-probe'));
   const viewport = window.visualViewport;
   const standalone = launchMode() !== 'browser';
-  modeLabel.textContent = standalone ? '已从桌面图标打开' : '当前是普通网页，请添加测试图标后再打开';
+  modeLabel.textContent = standalone ? '已从桌面图标打开' : '当前为浏览器对照，无需添加图标';
   document.getElementById('install-hint').hidden = standalone;
   samples[shell.dataset.layout] = {
    screen:{width:screen.width,height:screen.height,availHeight:screen.availHeight,dpr:devicePixelRatio},
@@ -27,9 +27,9 @@
    visualViewport:viewport ? {height:round(viewport.height),width:round(viewport.width),offsetTop:round(viewport.offsetTop),scale:round(viewport.scale)} : null,
    safeArea:Object.fromEntries(['Top','Right','Bottom','Left'].map(edge=>[edge.toLowerCase(),parseFloat(safe['padding'+edge])])),
    vh:rect('vh-probe').height,dvh:CSS.supports('height','100dvh') ? rect('dvh-probe').height : null,
-   shell:rect('test-shell'),header:rect('test-header'),title:rect('test-title'),content:rect('test-content'),contentScrollTop:round(document.getElementById('test-content').scrollTop),rootScrollHeight:shell.scrollHeight,endMarker:rect('end-marker'),documentScrollY:round(scrollY)
+   shell:rect('test-shell'),header:rect('test-header'),title:rect('test-title'),content:rect('test-content'),contentScrollTop:round(document.getElementById('test-content').scrollTop),shellScrollHeight:shell.scrollHeight,endMarker:rect('end-marker'),documentScrollY:round(scrollY)
   };
-  report.value = JSON.stringify({test:'ios27-display-check-1',launchMode:launchMode(),viewportFit:'cover',statusBarMeta:'omitted',userAgent:navigator.userAgent,observations,samples},null,2);
+  report.value = JSON.stringify({test:'ios27-display-check-2',launchMode:launchMode(),viewportFit:'cover',statusBarMeta:'omitted',userAgent:navigator.userAgent,observations,samples},null,2);
  }
  let frame;
  function schedule() {

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=auto">
+ <title>顶部文字对照</title>
+ <style>
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#fff;color:#303030;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}
+  .sample-bar{display:grid;grid-template-columns:80px minmax(0,1fr) 80px;align-items:center;height:47px;padding:0 16px;border-bottom:1px solid #ddd;background:#fff}
+  .sample-title{margin:0;text-align:center;white-space:nowrap;font-size:17px;line-height:24px;font-weight:400}
+  .sample-back,.sample-action{font-size:15px;line-height:24px;white-space:nowrap}
+  .sample-back{color:#5286D0;display:flex;align-items:center;gap:5px}
+  .sample-back svg{width:10px;height:19px;flex:none;stroke:#4984E1;fill:none;stroke-width:1.5}
+  .sample-action{color:#5485D8;text-align:right}
+  main{max-width:640px;margin:0 auto;padding:20px 16px 28px}
+  p{font-size:15px;line-height:24px;margin:0 0 12px}
+  .muted{color:#626b75;font-size:13px}
+  .control-label{margin-top:28px;color:#626b75;font-size:13px}
+  .lower-sample{margin:0 -16px 24px}
+  fieldset{border:0;padding:0;margin:24px 0 12px;min-width:0}
+  legend{font-size:16px;font-weight:600;margin-bottom:12px}
+  button{font:inherit;cursor:pointer}
+  .choice{display:block;width:100%;margin:8px 0;padding:13px 10px;border:1px solid #b9cce7;border-radius:8px;background:#fff;color:#315f9b;text-align:center;font-size:15px}
+  .choice[aria-pressed="true"]{background:#edf4ff;border-color:#286fd6}
+  #copy{display:block;width:100%;padding:14px;border:0;border-radius:8px;background:#286fd6;color:#fff;font-size:16px}
+  #feedback{margin-top:12px;color:#315f9b}
+  #report{display:block;width:100%;height:200px;font-size:12px;padding:8px;margin:12px 0;border:1px solid #ccd4df;border-radius:6px}
+  details{margin:20px 0;font-size:13px;color:#626b75}
+  .scroll-note{margin-top:44px}
+  footer{padding:20px 16px 36px;text-align:center;border-top:1px solid #ddd;color:#626b75;font-size:13px}
+  a{color:#5286D0}
+ </style>
+</head>
+<body>
+ <header class="sample-bar" id="top-sample" aria-label="顶部文字样本">
+  <span class="sample-back"><svg viewBox="0 0 10 19" aria-hidden="true"><path d="M9 1 1 9.5 9 18"/></svg>返回</span>
+  <h1 class="sample-title">收入纳税明细</h1>
+  <span class="sample-action">批量申诉</span>
+ </header>
+ <main>
+  <p><strong>这次直接打开看，不用添加桌面图标。</strong></p>
+  <p>上方和下方的文字，字号、颜色完全相同。请比较打开时两行的清晰度。</p>
+  <p class="muted">这里只显示对照文字，不是个税页面；“返回”和“批量申诉”是文字样本。</p>
+  <p class="control-label">下方对照</p>
+  <div class="sample-bar lower-sample" id="lower-sample" aria-label="下方文字样本">
+   <span class="sample-back"><svg viewBox="0 0 10 19" aria-hidden="true"><path d="M9 1 1 9.5 9 18"/></svg>返回</span>
+   <h2 class="sample-title">收入纳税明细</h2>
+   <span class="sample-action">批量申诉</span>
+  </div>
+  <fieldset>
+   <legend>你看到的是哪一种？</legend>
+   <button class="choice" type="button" data-result="both-clear" aria-pressed="false">两处都清楚</button>
+   <button class="choice" type="button" data-result="top-blurred" aria-pressed="false">只有顶部模糊</button>
+   <button class="choice" type="button" data-result="both-blurred" aria-pressed="false">两处都模糊</button>
+  </fieldset>
+  <button id="copy" type="button">复制结果</button>
+  <p id="feedback" role="status" aria-live="polite">选好后复制结果，粘贴发给我即可。</p>
+  <details id="diagnostics"><summary>查看结果文字</summary><textarea id="report" readonly aria-label="结果文字" spellcheck="false"></textarea></details>
+  <p class="muted">此页不读取、修改或上传个税数据。结果只有你点击复制后才会进入剪贴板。</p>
+  <p class="scroll-note">向上滑动时，最上面的样本文字会随整页一起离开屏幕，这是本次对照的正常表现。</p>
+  <p class="muted" id="launch-mode"></p>
+ </main>
+ <footer>页面结束 · <a href="./">返回旧对照页</a></footer>
+ <script>
+ (() => {
+  'use strict';
+  let observation = null;
+  let initial = null;
+  const output = document.getElementById('report');
+  const feedback = document.getElementById('feedback');
+  const round = value => Math.round(value * 100) / 100;
+  const rect = id => {
+   const bounds = document.getElementById(id).getBoundingClientRect();
+   return Object.fromEntries(['top','left','width','height','bottom'].map(key => [key,round(bounds[key])]));
+  };
+  function sample() {
+   const viewport = window.visualViewport;
+   const scrolling = document.scrollingElement;
+   return {
+    inner:{width:innerWidth,height:innerHeight},
+    visualViewport:viewport ? {width:round(viewport.width),height:round(viewport.height),offsetTop:round(viewport.offsetTop),scale:round(viewport.scale)} : null,
+    screen:{width:screen.width,height:screen.height,dpr:devicePixelRatio},
+    scrollingElement:scrolling && scrolling.tagName,
+    scrollY:round(scrollY),scrollHeight:scrolling && scrolling.scrollHeight,clientHeight:scrolling && scrolling.clientHeight,
+    top:rect('top-sample'),lower:rect('lower-sample')
+   };
+  }
+  function update() {
+   const mode = matchMedia('(display-mode:standalone)').matches || navigator.standalone === true ? 'standalone' : matchMedia('(display-mode:fullscreen)').matches ? 'fullscreen' : 'browser';
+   document.getElementById('launch-mode').textContent = mode === 'browser' ? '当前为浏览器对照；桌面图标内的显示需要另外核对。' : mode === 'standalone' ? '当前从桌面入口打开。' : '当前为全屏显示。';
+   output.value = JSON.stringify({test:'document-auto-1',observation,launchMode:mode,viewportFit:'auto',scrollMode:'document',userAgent:navigator.userAgent,initial,current:sample()},null,2);
+  }
+  document.querySelectorAll('[data-result]').forEach(button => button.addEventListener('click',() => {
+   observation = button.dataset.result;
+   document.querySelectorAll('[data-result]').forEach(item => item.setAttribute('aria-pressed',String(item === button)));
+   feedback.textContent = '已选择：'+button.textContent+'。点击“复制结果”，再粘贴发给我。';
+   update();
+  }));
+  document.getElementById('copy').addEventListener('click',async () => {
+   update();
+   try {
+    await navigator.clipboard.writeText(output.value);
+    feedback.textContent = '已复制，请粘贴发回对话。';
+   } catch {
+    document.getElementById('diagnostics').open = true;
+    output.focus();output.select();
+    feedback.textContent = '请长按下方选中的文字，复制后发回对话。';
+   }
+  });
+  window.addEventListener('pageshow',() => { update();requestAnimationFrame(() => { initial = sample();update(); }); });
+  window.addEventListener('resize',update);
+ })();
+ </script>
+</body>
+</html>
