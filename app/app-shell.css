@@ -1,26 +1,25 @@
-/* The document never scrolls. Only each page's content pane owns scrolling. */
-html,body{height:100%;overflow:hidden;overscroll-behavior:none}
-@media(max-width:500px),(display-mode:standalone),(display-mode:fullscreen){
- html,body{background:var(--app-chrome-color,#2788ef)}
-}
-/* Anchor to the viewport edges, not 100vh: installed Safari can include the
-   status bar in viewport units even when its web view starts below that bar. */
+/* Shared content canvas. The device owns the system status indicators. */
 .phone{
  --safe-top:env(safe-area-inset-top,0px);
  --safe-bottom:env(safe-area-inset-bottom,0px);
- /* Consume the system inset once, at each page's header. No mock status row. */
- --content-top:var(--safe-top);
+ /* Keep interactive headers clear of the system status/scroll-edge area. */
+ --top-clearance:24px;
+ --content-top:calc(var(--safe-top) + var(--top-clearance));
  --app-bar:52.333333rem;
  --app-bar-pad:5.333333rem;
- position:fixed;inset:0;height:auto;max-height:none;
+ height:100dvh;max-height:none;
 }
 .phone .status,.phone .income-status,.phone .flow-status{display:none}
 .phone>.header,.phone>.tab-page:not(.profile)>.tab-top,.phone>.income-page,.phone>.flow-page{padding-top:var(--content-top)}
 /* The profile illustration already separates its controls from the top edge. */
 .phone>.profile>.tab-top{padding-top:var(--safe-top)}
-/* Opaque header/safe-area background stays outside the scrolling result list. */
-.phone>.income-page{background:#fff}
+/* Results use a slightly tighter clearance after the on-device spacing review. */
+.phone>.income-page{padding-top:calc(var(--safe-top) + 12px);background:#fff}
 .phone>.income-page>.income-scroll{background:#f4f5f9}
+/* Installed iOS web apps can undercount the full viewport with dynamic units. */
+@media(display-mode:standalone),(display-mode:fullscreen){
+ .phone{height:100vh;max-height:none}
+}
 .phone>.income-page,.phone>.flow-page{min-height:0}
 .phone .income-bar{height:var(--app-bar);padding-top:var(--app-bar-pad);flex:none}
 .phone>.income-page>.income-bar{height:47rem;padding-top:1.333333rem}
@@ -28,8 +27,8 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 .phone .income-bar button{font-size:15rem;line-height:22rem}
 .phone .income-scroll,.phone .flow-body{min-height:0}
 
-/* Home's reference search bar begins immediately below the real safe area. */
-.phone>.header,.phone>.scroll{--app-bar:44.666667rem;--app-bar-pad:0rem}
+/* Home has the reference 44⅔-point search bar, below a 20px extra clearance. */
+.phone>.header,.phone>.scroll{--content-top:calc(var(--safe-top) + 20px);--app-bar:44.666667rem;--app-bar-pad:0rem}
 /* The home scroll origin follows its shorter fixed search bar. */
 .phone>.header{height:calc(var(--content-top) + var(--app-bar))}
 .phone>.header .search-row{height:var(--app-bar);padding-top:var(--app-bar-pad);padding-bottom:0}

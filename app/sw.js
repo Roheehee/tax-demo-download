@@ -1,10 +1,9 @@
 'use strict';
-const VERSION = 'v32-safe-area-shell-20261107-2';
+const VERSION = 'v33-restore-ios-layout-20261107';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
 const FILES = [
-  "app-shell.js",
   "assets/home-ui/article-filing.png",
   "assets/home-ui/article-password.png",
   "assets/home-ui/article-refund.png",
