@@ -13,7 +13,8 @@
 .phone>.header,.phone>.tab-page:not(.profile)>.tab-top,.phone>.income-page,.phone>.flow-page{padding-top:var(--content-top)}
 /* The profile illustration already separates its controls from the top edge. */
 .phone>.profile>.tab-top{padding-top:var(--safe-top)}
-.phone>.income-page{background:#fff}
+/* Results use a slightly tighter clearance after the on-device spacing review. */
+.phone>.income-page{padding-top:calc(var(--safe-top) + 20px);background:#fff}
 .phone>.income-page>.income-scroll{background:#f4f5f9}
 /* Installed iOS web apps can undercount the full viewport with dynamic units. */
 @media(display-mode:standalone),(display-mode:fullscreen){
