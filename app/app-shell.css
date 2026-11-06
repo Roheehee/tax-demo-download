@@ -14,7 +14,7 @@
 /* The profile illustration already separates its controls from the top edge. */
 .phone>.profile>.tab-top{padding-top:var(--safe-top)}
 /* Results use a slightly tighter clearance after the on-device spacing review. */
-.phone>.income-page{padding-top:calc(var(--safe-top) + 20px);background:#fff}
+.phone>.income-page{padding-top:calc(var(--safe-top) + 16px);background:#fff}
 .phone>.income-page>.income-scroll{background:#f4f5f9}
 /* Installed iOS web apps can undercount the full viewport with dynamic units. */
 @media(display-mode:standalone),(display-mode:fullscreen){
@@ -27,7 +27,9 @@
 .phone .income-bar button{font-size:15rem;line-height:22rem}
 .phone .income-scroll,.phone .flow-body{min-height:0}
 
-/* Home search and tab headings use the same content-header height. */
+/* Home has the reference 44⅔-point search bar, below a 20px extra clearance. */
+.phone>.header,.phone>.scroll{--content-top:calc(var(--safe-top) + 20px);--app-bar:44.666667rem;--app-bar-pad:0rem}
+/* The home scroll origin follows its shorter fixed search bar. */
 .phone>.header{height:calc(var(--content-top) + var(--app-bar))}
 .phone>.header .search-row{height:var(--app-bar);padding-top:var(--app-bar-pad);padding-bottom:0}
 .phone>.scroll{padding-top:calc(var(--content-top) + var(--app-bar) + 13rem);padding-bottom:calc(100rem + var(--safe-bottom))}
@@ -69,3 +71,9 @@
 
 /* This native dialog lives under body, outside the rem-based phone canvas. */
 .data-backup-dialog{inset:calc(16px + env(safe-area-inset-top,0px)) 0 calc(16px + env(safe-area-inset-bottom,0px));max-height:calc(100dvh - 32px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+
+/* Home capsule already includes 12rem below its labels; avoid counting it twice. */
+.phone:not([data-active-tab])>.nav,.phone[data-active-tab="home"]>.nav{
+ bottom:max(22rem,calc(var(--safe-bottom) - 12rem));
+ padding-left:22.333333rem;padding-right:22.333333rem;
+}

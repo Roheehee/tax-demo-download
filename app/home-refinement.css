@@ -10,7 +10,7 @@
 }
 .phone > .header .search-row { padding-top: 6rem; }
 .phone > .header .search { background: #ffffff66; }
-.phone > .header.solid { background: #267be1; }
+.phone > .header.solid { background: #247be1; }
 .phone > .scroll .section-title { margin-top: 48rem; }
 .phone > .scroll .tiles {
   height: 153rem;
@@ -50,9 +50,6 @@
 }
 .phone > .scroll .article h3 { font-weight: 400; }
 .phone > .scroll .article:nth-child(3)::before { transform: scaleX(-1); }
-.phone > .scroll .article:nth-child(3) .thumb {
-  background-position: -13rem -765rem;
-}
 .phone > .scroll .notice { padding-left: 6rem; gap: 14rem; }
 .phone > .scroll .notice .bell {
   display: block;
@@ -80,3 +77,62 @@
 .phone > .scroll .category { font-size: 15rem; }
 .phone > .scroll .category.active { font-size: 17rem; }
 .phone > .scroll .deduction { box-shadow: 0 7rem 14rem #67b8f585, 0 0 5rem #7bcefa55; }
+
+/* v30: original homepage cards and decoration; system status content is excluded. */
+.phone > .scroll .memory {
+  height: 98rem;
+  background: url(assets/home-ui/tax-record-banner.png) center / 100% 100% no-repeat;
+}
+.phone > .scroll .article h3 { line-height: 21.333333rem; }
+.phone > .scroll .article .thumb {
+  top: 10.666667rem;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 0;
+}
+.phone > .scroll .article-password { background-image: url(assets/home-ui/article-password.png); }
+.phone > .scroll .article-refund { background-image: url(assets/home-ui/article-refund.png); }
+.phone > .scroll .article-filing { background-image: url(assets/home-ui/article-filing.png); }
+.phone > .scroll .article-rights { background-image: url(assets/home-ui/article-rights.png); }
+.phone > .scroll .article-left { padding-top: 22.666667rem; }
+.phone > .scroll .article-left::before { transform: scaleX(-1); }
+.phone > .scroll .article-left h3 { margin-left: 149.333333rem; width: 198rem; }
+.phone > .scroll .article-left .thumb { left: 0; right: auto; }
+.phone > .scroll .article .date {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  line-height: 17.333333rem;
+  color: #a4a6a5;
+}
+.phone > .scroll .article-left .date { left: 166.333333rem; }
+.phone > .scroll .date-clock { width: 12rem; height: 12rem; flex: none; }
+.phone > .scroll .article-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rem;
+  width: 100%;
+  height: 24rem;
+  margin-top: 15rem;
+  padding: 0;
+  font-size: 15rem;
+  line-height: 24rem;
+  color: #a4a6a5;
+  background: transparent;
+}
+.phone > .scroll .article-more[hidden] { display: none; }
+.phone > .scroll .article-more i {
+  width: 7rem;
+  height: 7rem;
+  border-top: 1.5rem solid currentColor;
+  border-right: 1.5rem solid currentColor;
+  transform: rotate(45deg);
+}
+.phone > .scroll .home-city {
+  width: calc(100% + 26rem);
+  height: 66rem;
+  margin: 0 -13rem;
+  background: url(assets/home-ui/city-strip.png) center / 100% 100% no-repeat;
+}

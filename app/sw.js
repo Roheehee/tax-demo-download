@@ -1,9 +1,16 @@
 'use strict';
-const VERSION = 'v29-income-top-spacing-20261107';
+const VERSION = 'v30-home-reference-20261107';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
 const FILES = [
+  "assets/home-ui/article-filing.png",
+  "assets/home-ui/article-password.png",
+  "assets/home-ui/article-refund.png",
+  "assets/home-ui/article-rights.png",
+  "assets/home-ui/city-strip.png",
+  "assets/home-ui/tax-record-banner.png",
+
   "income-preset.js",
   "income-defaults.js",
   "income-import-ui.js",
