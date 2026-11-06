@@ -1,5 +1,8 @@
 /* The document never scrolls. Only each page's content pane owns scrolling. */
 html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+@media(max-width:500px),(display-mode:standalone),(display-mode:fullscreen){
+ html,body{background:var(--app-chrome-color,#2788ef)}
+}
 /* Anchor to the viewport edges, not 100vh: installed Safari can include the
    status bar in viewport units even when its web view starts below that bar. */
 .phone{

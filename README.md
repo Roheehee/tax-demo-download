@@ -1,6 +1,6 @@
 # 个税演示下载页
 
-2026-11-07 v32：移除旧 black-translucent 状态栏 meta；html/body 禁止外层滚动，phone 改 fixed/inset:0/height:auto，以视口边界布局，取消 installed 100vh 特例。各页继续仅消费一次 env(safe-area-inset-top)，去掉结果页12px、首页20px、其他标题/流程24px的附加留白；导航条自身高度、个人页及底部安全区规则保留，不绘制系统时间/信号/电量。402宽safe62测试结果页导航62–109（此前74–121），首页搜索top67.33；375宽无横向溢出，列表末项/详情/查询及编辑末项的内部滚动通过，402×520视口保存按钮可见。收入数据与存储模块未改。CSS引用/SW升v32，QA在tax-visual-review/safe-area-v32。本轮无法通过CUA打开Simulator.app，未完成iOS模拟器或用户iPhone验收，不能据桌面结果保证系统模糊已消除。
+2026-11-07 v32：新增app-shell.js，让主题色和html/body底色随当前导航同步（首页蓝、个人页蓝、明细/流程白），避免固定蓝色提示串到白色页面。移除旧 black-translucent 状态栏 meta；html/body 禁止外层滚动，phone 改 fixed/inset:0/height:auto，以视口边界布局，取消 installed 100vh 特例。各页继续仅消费一次 env(safe-area-inset-top)，去掉结果页12px、首页20px、其他标题/流程24px的附加留白；导航条自身高度、个人页及底部安全区规则保留，不绘制系统时间/信号/电量。402宽safe62测试结果页导航62–109（此前74–121），首页搜索top67.33；375宽无横向溢出，列表末项/详情/查询及编辑末项的内部滚动通过，402×520视口保存按钮可见。收入数据与存储模块未改。CSS引用/SW升v32，QA在tax-visual-review/safe-area-v32。本轮无法通过CUA打开Simulator.app，未完成iOS模拟器或用户iPhone验收，不能据桌面结果保证系统模糊已消除。
 
 2026-11-07 v31：按最新真机反馈，仅将收入结果页额外顶部留白16px缩至12px；导航及内容整体再上移4 CSS px，真实safe-top保留。47rem导航、首页20px留白、其他页面及收入数据/编辑功能均不改。402宽safe62量测导航顶部78→74、底部125→121，滚动底仍874；375宽刷新后无横向溢出。仅CSS、引用与SW升版；QA在tax-visual-review/top-v31，未实测用户iPhone。
 
