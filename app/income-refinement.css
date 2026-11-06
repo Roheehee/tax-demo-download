@@ -6,6 +6,9 @@
 .income-page>.income-bar{height:47rem;padding-top:1.333333rem;border-bottom-color:#e2e2e2}
 .income-page>.income-bar h1{font-size:17rem;line-height:24rem;color:#333}
 .income-page>.income-bar button{font-size:15rem;line-height:22rem;color:#4e85d3}
+.income-page>.income-bar>.income-back{color:#5286D0}
+.income-page>.income-bar>.income-back>.back-chevron{border-color:#4984E1}
+.income-page>.income-bar>.batch{color:#5485D8}
 .income-page>.income-bar .batch{transform:translate(-14rem,.666667rem)}
 .income-page .income-summary{margin-top:13.333333rem;padding:0 17rem}
 .income-page .total-line{height:42rem;font-size:15.333333rem;line-height:21rem;font-weight:500;color:#333}
@@ -23,6 +26,7 @@
 }
 .income-page .income-colon{transform:translateY(-2.666667rem)}
 .income-page .income-help svg{display:block;width:100%;height:100%}
+.income-page .income-help svg>circle:first-child{stroke:#7480C3}
 .income-page .income-back .back-chevron{width:11.5rem;height:11.5rem;margin-left:3rem;margin-right:0}
 .income-page .income-help:focus-visible{outline:2rem solid #a5ceff;outline-offset:3rem}
 .income-page .income-records{margin-top:12rem;gap:13rem;background:#f4f5f9}

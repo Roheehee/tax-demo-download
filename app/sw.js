@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v33-restore-ios-layout-20261107';
+const VERSION = 'v34-income-colors-20261107';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
