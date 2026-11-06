@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v27-income-calibration-20261106';
+const VERSION = 'v28-top-clearance-20261107';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
@@ -144,7 +144,25 @@ self.addEventListener('fetch', event => {
   const key = resource(event.request.url);
   if (!key || (event.request.mode === 'navigate' && key !== APP && key !== INSTALL)) return;
   event.respondWith((async () => {
-    try { return await download(event.request.url, key); }
+    try {
+      const image = /\.(png|jpg|svg)$/.test(new URL(key).pathname);
+      if (image) {
+        try {
+          const cached = await (await caches.open(CACHE)).match(key);
+          if (cached) return cached;
+        } catch {
+          // Unavailable local storage must not prevent a normal network download.
+        }
+      }
+      const response = await download(event.request.url, key);
+      if (image) {
+        // Keep validated images available even if a previous full-bundle prepare failed.
+        // A storage failure must not hide an image that already downloaded successfully.
+        const copy = response.clone();
+        event.waitUntil(caches.open(CACHE).then(cache => cache.put(key, copy)).catch(() => {}));
+      }
+      return response;
+    }
     catch {
       const cached = await (await caches.open(CACHE)).match(key);
       return cached || Response.error();

@@ -2,15 +2,18 @@
 .phone{
  --safe-top:env(safe-area-inset-top,0px);
  --safe-bottom:env(safe-area-inset-bottom,0px);
+ /* Keep interactive headers clear of the system status/scroll-edge area. */
+ --top-clearance:24px;
+ --content-top:calc(var(--safe-top) + var(--top-clearance));
  --app-bar:52.333333rem;
  --app-bar-pad:5.333333rem;
  height:100dvh;max-height:none;
 }
 .phone .status,.phone .income-status,.phone .flow-status{display:none}
-.phone>.header,.phone>.tab-page>.tab-top,.phone>.income-page,.phone>.flow-page{padding-top:var(--safe-top)}
-/* Query retains its requested clearance; results use only the real device inset. */
-.phone>.income-query-flow{padding-top:calc(var(--safe-top) + 16px)}
-.phone>.income-page{padding-top:var(--safe-top);background:#fff}
+.phone>.header,.phone>.tab-page:not(.profile)>.tab-top,.phone>.income-page,.phone>.flow-page{padding-top:var(--content-top)}
+/* The profile illustration already separates its controls from the top edge. */
+.phone>.profile>.tab-top{padding-top:var(--safe-top)}
+.phone>.income-page{background:#fff}
 .phone>.income-page>.income-scroll{background:#f4f5f9}
 /* Installed iOS web apps can undercount the full viewport with dynamic units. */
 @media(display-mode:standalone),(display-mode:fullscreen){
@@ -24,9 +27,9 @@
 .phone .income-scroll,.phone .flow-body{min-height:0}
 
 /* Home search and tab headings use the same content-header height. */
-.phone>.header{height:calc(var(--safe-top) + var(--app-bar))}
+.phone>.header{height:calc(var(--content-top) + var(--app-bar))}
 .phone>.header .search-row{height:var(--app-bar);padding-top:var(--app-bar-pad);padding-bottom:0}
-.phone>.scroll{padding-top:calc(var(--safe-top) + var(--app-bar) + 13rem);padding-bottom:calc(100rem + var(--safe-bottom))}
+.phone>.scroll{padding-top:calc(var(--content-top) + var(--app-bar) + 13rem);padding-bottom:calc(100rem + var(--safe-bottom))}
 .phone>.tab-page.current{display:flex;flex-direction:column}
 .phone>.tab-page>.tab-top{height:auto;flex:none}
 .phone>.tab-page .tab-heading{height:var(--app-bar);padding-top:var(--app-bar-pad);margin-top:0;flex:none}
@@ -58,7 +61,7 @@
 .phone .year-picker-panel{margin-bottom:var(--safe-bottom)}
 
 /* Document zoom follows the real header instead of the former 112-point shell. */
-.phone .tax-document-zoom{top:calc(var(--safe-top) + var(--app-bar));bottom:var(--safe-bottom)}
+.phone .tax-document-zoom{top:calc(var(--content-top) + var(--app-bar));bottom:var(--safe-bottom)}
 .phone .tax-document-zoom>img{top:50%}
 .phone .tax-zoom-demo.tax-single-page{transform:none}
 .phone .tax-document-flow .tax-document-close{top:var(--app-bar-pad);height:calc(var(--app-bar) - var(--app-bar-pad))}

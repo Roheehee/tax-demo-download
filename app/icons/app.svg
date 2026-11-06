@@ -1,1 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><rect width="512" height="512" rx="105" fill="#238bf6"/><rect x="104" y="90" width="304" height="332" rx="35" fill="white"/><path d="M161 163h190M161 218h130M161 273h80" stroke="#238bf6" stroke-width="25" stroke-linecap="round"/><circle cx="324" cy="332" r="63" fill="#e2f2ff"/><path d="m295 331 20 21 38-44" fill="none" stroke="#238bf6" stroke-width="16" stroke-linecap="round"/><text x="256" y="475" fill="white" text-anchor="middle" font-size="30" font-family="sans-serif">演示</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#25b6fa"/>
+      <stop offset=".48" stop-color="#138bed"/>
+      <stop offset="1" stop-color="#048bea"/>
+    </linearGradient>
+    <linearGradient id="wave" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#69e0f8"/>
+      <stop offset=".5" stop-color="#25bff2"/>
+      <stop offset="1" stop-color="#1298ec"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d7faff" stop-opacity=".8"/>
+      <stop offset=".22" stop-color="#b6ecff" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#75ddff" stop-opacity=".35"/>
+    </linearGradient>
+    <clipPath id="icon"><rect width="512" height="512" rx="122"/></clipPath>
+  </defs>
+  <g clip-path="url(#icon)">
+    <rect width="512" height="512" fill="url(#blue)"/>
+    <path d="M0 188C87 234 157 302 256 335C355 304 425 237 512 190V389H0Z" fill="#2da8f6" opacity=".23"/>
+    <path d="M0 245C95 296 167 338 256 359C345 335 417 294 512 245V404H0Z" fill="#45bcf8" opacity=".2"/>
+    <path d="M0 325C89 348 172 369 256 376C340 369 423 348 512 325V512H0Z" fill="url(#wave)"/>
+    <path d="M256 52C214 73 173 85 128 92C127 201 161 284 256 350C351 284 385 201 384 92C339 85 298 73 256 52Z" fill="none" stroke="#fff" stroke-width="20" stroke-linejoin="round"/>
+    <text x="256" y="226" text-anchor="middle" fill="#fff" font-family="PingFang SC,Heiti SC,Arial Unicode MS,sans-serif" font-size="126" font-weight="500">税</text>
+    <g fill="#fff" text-anchor="middle" font-family="PingFang SC,Heiti SC,Arial Unicode MS,sans-serif" font-weight="600">
+      <text x="256" y="438" font-size="45">国家税务总局</text>
+      <text x="256" y="486" font-size="40">发布</text>
+    </g>
+    <rect x="2" y="2" width="508" height="508" rx="120" fill="none" stroke="url(#edge)" stroke-width="4"/>
+  </g>
+</svg>
