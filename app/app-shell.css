@@ -8,10 +8,17 @@
 }
 .phone .status,.phone .income-status,.phone .flow-status{display:none}
 .phone>.header,.phone>.tab-page>.tab-top,.phone>.income-page,.phone>.flow-page{padding-top:var(--safe-top)}
-/* Extra clearance for query and results headers; keep the real device inset. */
-.phone>.income-query-flow,.phone>.income-page{padding-top:calc(var(--safe-top) + 16px)}
+/* Query retains its requested clearance; results use only the real device inset. */
+.phone>.income-query-flow{padding-top:calc(var(--safe-top) + 16px)}
+.phone>.income-page{padding-top:var(--safe-top);background:#fff}
+.phone>.income-page>.income-scroll{background:#f4f5f9}
+/* Installed iOS web apps can undercount the full viewport with dynamic units. */
+@media(display-mode:standalone),(display-mode:fullscreen){
+ .phone{height:100vh;max-height:none}
+}
 .phone>.income-page,.phone>.flow-page{min-height:0}
 .phone .income-bar{height:var(--app-bar);padding-top:var(--app-bar-pad);flex:none}
+.phone>.income-page>.income-bar{height:47rem;padding-top:1.333333rem}
 .phone .income-bar h1{font-size:17rem;line-height:24rem;font-weight:400}
 .phone .income-bar button{font-size:15rem;line-height:22rem}
 .phone .income-scroll,.phone .flow-body{min-height:0}

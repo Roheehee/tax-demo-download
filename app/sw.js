@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v26-income-defaults-20261106';
+const VERSION = 'v27-income-calibration-20261106';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
