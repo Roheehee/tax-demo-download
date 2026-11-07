@@ -23,13 +23,13 @@ function setIncomeVisible(visible){
   if(visible)incomePage.querySelector('.income-scroll').scrollTop=0;
 }
 incomePage.inert=true;
-function showIncome(){if(location.hash!=='#income')history.pushState({page:'income'},'', '#income');setIncomeVisible(true)}
+function showIncome(){if(window.TaxIncomeNavigation){TaxIncomeNavigation.openResults();return;}if(location.hash!=='#income')history.pushState({page:'income'},'', '#income');setIncomeVisible(true)}
 incomePage.querySelector('.income-back').onclick=()=>{if(location.hash==='#income')history.back();else setIncomeVisible(false)};
-window.addEventListener('popstate',()=>setIncomeVisible(location.hash==='#income'));
+window.addEventListener('popstate',()=>setIncomeVisible(!window.TaxIncomeNavigation && location.hash==='#income'));
 const originalOpen = open;
 open = function(title){if(title==='收入纳税明细'){showIncome();return}originalOpen(title)};
 function recordingPlaceholder(title){originalOpen(title);document.querySelector('.sheet p').textContent='录屏未展示此入口内的页面。当前保留入口，待补充对应画面后继续复刻。'}
 incomePage.querySelector('.batch').onclick=()=>recordingPlaceholder('批量申诉');
 incomePage.querySelector('.income-help').onclick=()=>recordingPlaceholder('收入合计说明');
 incomePage.querySelectorAll('button.income-record').forEach(b=>b.onclick=()=>recordingPlaceholder(b.getAttribute('aria-label')));
-if(location.hash==='#income')setIncomeVisible(true);
+document.addEventListener('DOMContentLoaded',()=>{if(!window.TaxIncomeNavigation && location.hash==='#income')setIncomeVisible(true);},{once:true});

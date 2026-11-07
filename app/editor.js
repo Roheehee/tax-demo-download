@@ -1,39 +1,30 @@
 // Competition demo: user edits stay in this browser/device.
-const demoStorageKey='tax-replica-income-v1';
-const demoDefaults=[...incomeRows,...moreRows,{type:'劳务报酬',month:'2026-03',category:'其他连续劳务报酬',company:'示例服务有限公司',income:'',tax:''}].map((r,i)=>({...r,id:i,company:r.type==='工资薪金'?'示例科技有限公司':'示例服务有限公司'}));
-// Preserve legacy defaults only for matching previously saved reference details.
-const builtInIncome=typeof TaxIncomeDefaults!=='undefined'&&typeof TaxIncomePreset!=='undefined'
- ? TaxIncomePreset.prepareImport([],{},TaxIncomeDefaults.create()):null;
-let usingBuiltInIncome=Boolean(builtInIncome);
-let demoRecords=structuredClone(builtInIncome?builtInIncome.records:demoDefaults);
-// Keep the original storage key and IDs so previously saved edits remain available.
-function validDemoRecord(r){return r&&['string','number'].includes(typeof r.id)&&/^\d{4}-(0[1-9]|1[0-2])$/.test(r.month)&&['type','category','company'].every(k=>typeof r[k]==='string')&&['income','tax'].every(k=>r[k]===''||/^\d+(\.\d{1,2})?$/.test(r[k]));}
-try{const saved=JSON.parse(localStorage.getItem(demoStorageKey));if(Array.isArray(saved)&&saved.every(validDemoRecord)&&new Set(saved.map(r=>String(r.id))).size===saved.length){demoRecords=saved;usingBuiltInIncome=false;}}catch{}
-const demoTypes=['工资薪金','劳务报酬','稿酬','特许权使用费','经营所得','利息、股息、红利','财产租赁','财产转让','偶然所得'];
-let incomeQueryYear='2026';
-let incomeQueryTypes=demoTypes.slice(0,4);
-try{
- const preferred=JSON.parse(localStorage.getItem(profileIdentityKey)||'null')?.incomePreferredQuery;
- if(!usingBuiltInIncome&&preferred&&/^[1-9]\d{3}$/.test(preferred.year)&&Array.isArray(preferred.types)&&preferred.types.length&&preferred.types.every(t=>demoTypes.includes(t))){incomeQueryYear=preferred.year;incomeQueryTypes=[...new Set(preferred.types)];}
-}catch{}
-function filteredDemoRecords(){return demoRecords.filter(r=>r.month.startsWith(incomeQueryYear+'-')&&incomeQueryTypes.includes(r.type)).sort((a,b)=>b.month.localeCompare(a.month));}
-function demoYearTotal(key){
- if(typeof TaxIncomePreset!=='undefined'&&typeof taxpayerProfileData==='function'){
-  const summaryProfile=taxpayerProfileData();
-  if(Object.hasOwn(summaryProfile.incomeSummaryRemainders||{},incomeQueryYear))return filteredDemoRecords().reduce((sum,r)=>sum+cents(r[key]),TaxIncomePreset.remainderForQuery(summaryProfile,incomeQueryYear,incomeQueryTypes,key));
- }
- // Totals include only the records visible under the selected year and types.
- return filteredDemoRecords().reduce((sum,r)=>sum+cents(r[key]),0);
+const incomeModel = TaxIncomeModel;
+const demoStorageKey = incomeModel.storageKey;
+const demoDefaults = incomeModel.legacyRecords();
+const demoTypes = incomeModel.types;
+const validDemoRecord = incomeModel.validRecord;
+const amountText = incomeModel.amountText;
+const cents = incomeModel.cents;
+const editorIncomeState = incomeModel.loadState();
+let { records: demoRecords, usingBuiltInIncome, year: incomeQueryYear, types: incomeQueryTypes } = editorIncomeState;
+
+function taxpayerProfileData() {
+  return incomeModel.readProfile(usingBuiltInIncome, typeof profileIdentity === 'string' ? profileIdentity : '');
 }
+function currentIncomeResult() {
+  return incomeModel.select({ ...editorIncomeState, records: demoRecords, profile: taxpayerProfileData() }, incomeQueryYear, incomeQueryTypes);
+}
+function filteredDemoRecords() { return currentIncomeResult().records; }
+function demoYearTotal(key) { return currentIncomeResult().totals[key]; }
 const htmlEscape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const amountText=v=>v===''?'—':Number(v).toFixed(2)+'元';
-const cents=v=>Math.round(Number(v||0)*100);
 function refreshDemoIncome(){
+ const result=currentIncomeResult();
  const list=incomePage.querySelector('.income-records');list.innerHTML='';
- filteredDemoRecords().forEach(r=>{const b=document.createElement('button');b.className='income-record';b.innerHTML=`<div class="record-heading"><span>${htmlEscape(r.type)}</span><span>${htmlEscape(r.month)}</span></div><div class="record-line">所得项目小类：${htmlEscape(r.category)}</div><div class="record-line">扣缴义务人：${htmlEscape(r.company)}</div><div class="record-line">收入：${amountText(r.income)}</div><div class="record-line">已申报税额：${amountText(r.tax)}</div><i class="record-arrow"></i>`;b.onclick=()=>showDemoDetail(r);list.append(b)});
+ result.records.forEach(r=>{const b=document.createElement('button');b.className='income-record';b.innerHTML=`<div class="record-heading"><span>${htmlEscape(r.type)}</span><span>${htmlEscape(r.month)}</span></div><div class="record-line">所得项目小类：${htmlEscape(r.category)}</div><div class="record-line">扣缴义务人：${htmlEscape(r.company)}</div><div class="record-line">收入：${amountText(r.income)}</div><div class="record-line">已申报税额：${amountText(r.tax)}</div><i class="record-arrow"></i>`;b.onclick=()=>showDemoDetail(r);list.append(b)});
  if(!list.children.length)list.innerHTML=`<p class="income-empty">${htmlEscape(incomeQueryYear)}年暂无符合条件的收入记录</p>`;
  const totals=incomePage.querySelectorAll('.total-line>span:last-child');
- ['income','tax'].forEach((k,i)=>totals[i].textContent=(demoYearTotal(k)/100).toFixed(2)+'元');
+ ['income','tax'].forEach((k,i)=>totals[i].textContent=(result.totals[k]/100).toFixed(2)+'元');
 }
 function matchesReference(r){const original=demoDefaults.find(d=>d.id===r.id);return original&&['month','type','company','income','tax'].every(k=>r[k]===original[k]);}
 const deductionFields=[['exemptIncome','本期免税收入'],['expense','本期减除费用'],['specialTotal','本期专项扣除合计'],['pension','基本养老保险'],['medical','基本医疗保险'],['unemployment','失业保险'],['housing','住房公积金'],['other','本期其他扣除'],['donation','本期准予扣除的捐赠项目']];
@@ -62,19 +53,6 @@ const taxRecordFields=[['declarationDate','申报日期'],['paidTax','实缴（�
 function recordTaxData(r){
  const stored=r?.taxRecord&&typeof r.taxRecord==='object'&&!Array.isArray(r.taxRecord)?r.taxRecord:{};
  return Object.fromEntries(taxRecordFields.map(([key])=>[key,String(stored[key]??'')]));
-}
-function taxpayerProfileData(){
- let profile={name:'演示用户',identity:typeof profileIdentity==='string'?profileIdentity:''};
- try{
-  const saved=JSON.parse(localStorage.getItem(profileIdentityKey));
-  if(saved&&typeof saved==='object'&&!Array.isArray(saved))profile={...saved,name:typeof saved.name==='string'?saved.name:'',identity:typeof saved.identity==='string'?saved.identity:''};
- }catch{}
- if(usingBuiltInIncome){
-  profile.incomeSummaryRemainders={...TaxIncomePreset.normalizeRemainders(profile),...structuredClone(builtInIncome.profile.incomeSummaryRemainders)};
-  profile.incomePreferredQuery={year:builtInIncome.summary.year,types:[...TaxIncomePreset.TYPES.slice(0,4)]};
-  profile.taxDocumentEdited=true;
- }
- return profile;
 }
 function validTaxRecordDate(value){
  if(value==='')return true;

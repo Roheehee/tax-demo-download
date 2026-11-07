@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v34-income-colors-20261107';
+const VERSION = 'v35-income-page-20261107';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
@@ -51,6 +51,11 @@ const FILES = [
   "icons/app.svg",
   "icons/apple-touch-icon.png",
   "income-refinement.css",
+  "income-model.js",
+  "income-navigation.js",
+  "income-view.css",
+  "income-view.html",
+  "income-view.js",
   "income.css",
   "income.js",
   "index.html",
@@ -69,10 +74,12 @@ const FILES = [
 ];
 const URLS = FILES.map(file => new URL(file, BASE).href);
 const ALLOWED = new Map(URLS.map(url => [new URL(url).pathname, url]));
-ALLOWED.set(BASE.pathname, new URL('index.html', BASE).href);
-ALLOWED.set(new URL('install', BASE).pathname, new URL('install.html', BASE).href);
-const APP = new URL('index.html', BASE).href;
-const INSTALL = new URL('install.html', BASE).href;
+const PAGES = new Map([
+  [new URL('index.html', BASE).href, { clean: './', marker: 'app' }],
+  [new URL('install.html', BASE).href, { clean: 'install', marker: 'install' }],
+  [new URL('income-view.html', BASE).href, { clean: 'income-view', marker: 'income' }]
+]);
+for (const [key, page] of PAGES) ALLOWED.set(new URL(page.clean, BASE).pathname, key);
 function resource(url) {
   const parsed = new URL(url);
   return parsed.origin === BASE.origin ? ALLOWED.get(parsed.pathname) : undefined;
@@ -82,9 +89,9 @@ async function valid(response, key) {
   const type = (response.headers.get('Content-Type') || '').split(';')[0].trim().toLowerCase();
   const path = new URL(key).pathname;
   if (path.endsWith('.html')) {
-    if (type !== 'text/html') return false;
-    const marker = key === APP ? 'app' : 'install';
-    return (await response.clone().text()).includes('<meta name="tax-demo-shell" content="' + marker + '">');
+    const page = PAGES.get(key);
+    if (type !== 'text/html' || !page) return false;
+    return (await response.clone().text()).includes('<meta name="tax-demo-shell" content="' + page.marker + '">');
   }
   if (path.endsWith('.js')) return ['text/javascript', 'application/javascript', 'application/x-javascript'].includes(type);
   if (path.endsWith('.css')) return type === 'text/css';
@@ -99,17 +106,19 @@ async function download(url, key) {
   const timer = setTimeout(() => controller.abort(), 10000);
   try {
     const options = { cache: 'no-cache', credentials: 'omit', redirect: 'error', signal: controller.signal };
+    const requested = new URL(url);
+    const page = PAGES.get(key);
+    let alternate;
+    if (page && resource(requested.href) === key) {
+      const clean = new URL(page.clean, BASE);
+      alternate = requested.pathname === clean.pathname ? new URL(key) : clean;
+      alternate.search = requested.search;
+    }
     let response;
     try { response = await fetch(url, options); }
-    catch (error) {
-      // Cloud hosting redirects only these two HTML files to their clean URLs.
-      // Retry the known URL directly, still rejecting every redirect it returns.
-      const requested = new URL(url);
-      if ((key !== APP && key !== INSTALL) || requested.origin !== BASE.origin || requested.pathname !== new URL(key).pathname) throw error;
-      const canonical = new URL(key === APP ? './' : 'install', BASE);
-      canonical.search = requested.search;
-      response = await fetch(canonical.href, options);
-    }
+    catch (error) { if (!alternate) throw error; }
+    // Try only this shell's other known path. Never follow a host redirect.
+    if (alternate && (!response || response.status === 404)) response = await fetch(alternate.href, options);
     if (!await valid(response, key)) throw new Error('Unexpected app resource');
     return response;
   } finally { clearTimeout(timer); }
@@ -138,7 +147,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('message', event => {
   if (!event.data || !['TAX_PWA_STATUS', 'TAX_PWA_PREPARE'].includes(event.data.type) || !event.ports[0]) return;
   const source = event.source && resource(event.source.url);
-  if (source !== APP && source !== INSTALL) return;
+  if (!PAGES.has(source)) return;
   event.waitUntil((async () => {
     try {
       if (event.data.type === 'TAX_PWA_PREPARE') await prepare();
@@ -149,7 +158,7 @@ self.addEventListener('message', event => {
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   const key = resource(event.request.url);
-  if (!key || (event.request.mode === 'navigate' && key !== APP && key !== INSTALL)) return;
+  if (!key || (event.request.mode === 'navigate' && !PAGES.has(key))) return;
   event.respondWith((async () => {
     try {
       const image = /\.(png|jpg|svg)$/.test(new URL(key).pathname);

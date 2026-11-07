@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="tax-demo-shell" content="income">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=auto">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="manifest" href="manifest.webmanifest?v=28">
+  <title>收入纳税明细</title>
+  <link rel="stylesheet" href="income.css?v=5">
+  <link rel="stylesheet" href="typography.css?v=5">
+  <link rel="stylesheet" href="income-refinement.css?v=34">
+  <link rel="stylesheet" href="income-view.css?v=35">
+</head>
+<body>
+  <header class="document-bar">
+    <a class="document-back" id="back" href="./" aria-label="返回上一页"><svg viewBox="0 0 10 19" aria-hidden="true"><path d="M9 1 1 9.5 9 18"/></svg>返回</a>
+    <h1>收入纳税明细</h1>
+    <button id="batch" type="button">批量申诉</button>
+  </header>
+  <main class="income-page document-list">
+    <section class="income-summary" aria-label="收入汇总">
+      <div class="total-line"><span>收入合计<button class="income-help" type="button" aria-label="收入合计说明"><svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6.65" stroke="currentColor" stroke-width=".72"/><path d="M5 5.3C5 2.7 9.1 2.5 9.2 5.2C9.3 6.7 7.1 6.9 7.1 8.6V9.45" stroke="currentColor" stroke-width=".6" stroke-linecap="round"/><circle cx="7.1" cy="10.8" r=".4" fill="currentColor"/></svg></button><span class="income-colon">:</span></span><span id="total-income">—</span></div>
+      <div class="total-line"><span>已申报税额合计:</span><span id="total-tax">—</span></div>
+    </section>
+    <div class="income-records"></div>
+  </main>
+  <dialog aria-labelledby="notice-title"><h2 id="notice-title"></h2><p id="notice-message"></p><form method="dialog"><button>关闭</button></form></dialog>
+  <script src="income-preset.js?v=25"></script>
+  <script src="income-defaults.js?v=26"></script>
+  <script src="income-model.js?v=35"></script>
+  <script src="income-navigation.js?v=35"></script>
+  <script src="income-view.js?v=35"></script>
+  <script src="pwa.js"></script>
+</body></html>

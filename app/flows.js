@@ -1,6 +1,6 @@
 const flowPage=document.createElement('section');flowPage.className='flow-page';flowPage.inert=true;phone.append(flowPage);
 let flowReturn=null;
-function closeFlow(){flowPage.classList.remove('visible');flowPage.inert=true;incomePage.inert=!incomePage.classList.contains('visible');if(!incomePage.classList.contains('visible'))renderTab(currentTab);document.querySelector('.nav').inert=incomePage.classList.contains('visible');}
+function closeFlow(){if(flowPage.matches('.income-query-flow.visible'))window.TaxIncomeNavigation?.forgetQuery();flowPage.classList.remove('visible');flowPage.inert=true;incomePage.inert=!incomePage.classList.contains('visible');if(!incomePage.classList.contains('visible'))renderTab(currentTab);document.querySelector('.nav').inert=incomePage.classList.contains('visible');}
 function showFlow(title,body,footer=''){
  flowPage.classList.remove('income-detail-flow','tax-calculation-flow','income-query-flow','phone-verification-flow','employment-flow','bank-flow','tax-issue-flow','tax-requests-flow','tax-document-flow');
  flowPage.innerHTML=`<div class="flow-status">${statusMarkup.replace('11:59','12:08').replace('>76<','>74<')}</div><header class="income-bar"><button class="flow-back" aria-label="返回上一页"><i class="back-chevron"></i>返回</button><h1>${title}</h1>${title==='收入纳税明细详情'?'<button class="batch" data-title="申诉">申诉</button>':'<span></span>'}</header><div class="flow-body">${body}</div>${footer}`;
@@ -62,7 +62,12 @@ function showIncomeQuery(){
  flowPage.querySelectorAll('input').forEach(c=>c.onchange=()=>submit.disabled=!flowPage.querySelector('input:checked'));
  submit.disabled=!flowPage.querySelector('input:checked');
  submit.onclick=()=>{
- incomeQueryYear=flowPage.querySelector('select').value;incomeQueryTypes=[...flowPage.querySelectorAll('input:checked')].map(c=>c.value);refreshDemoIncome();
+ incomeQueryYear=flowPage.querySelector('select').value;incomeQueryTypes=[...flowPage.querySelectorAll('input:checked')].map(c=>c.value);
+ if(window.TaxIncomeNavigation){
+  TaxIncomeNavigation.fromQuery({year:incomeQueryYear,types:incomeQueryTypes,tab:currentTab,expanded:more.getAttribute('aria-expanded')==='true',scroll:flowPage.querySelector('.flow-body').scrollTop});
+  return;
+ }
+ refreshDemoIncome();
  const view=captureFlowView(),returnUrl=location.pathname+location.hash;closeFlow();showIncome();
  incomePage.querySelector('.income-back').onclick=()=>{history.replaceState({tab:currentTab},'',returnUrl);setIncomeVisible(false);restoreFlowView(view);};
  };
