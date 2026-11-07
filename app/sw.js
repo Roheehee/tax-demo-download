@@ -1,12 +1,12 @@
 'use strict';
-const VERSION = 'v47-pending-query-20261108';
+const VERSION = 'v48-pending-query-20261108';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
 // Match the exact asset revisions used by the income document. A newer shell
 // asking an older worker for a different revision must still reach the network.
 const INCOME_ASSETS = [
-  'income.css?v=5', 'flows.css?v=44', 'typography.css?v=44', 'income-refinement.css?v=46', 'income-view.css?v=44',
+  'income.css?v=5', 'flows.css?v=44', 'typography.css?v=44', 'income-refinement.css?v=46',
   'income-preset.js?v=25', 'income-defaults.js?v=37', 'income-model.js?v=42', 'income-detail.js?v=42',
   'income-navigation.js?v=47', 'income-view.js?v=46', 'pwa.js'
 ];
