@@ -18,8 +18,10 @@
     { ...labor, id: 4, month: '2026-07', income: '300.00', tax: '0.00' },
     { ...labor, id: 5, month: '2026-03', income: '', tax: '' }
   ];
-  const builtIn = preset && root.TaxIncomeDefaults
-    ? preset.prepareImport([], {}, root.TaxIncomeDefaults.create()) : null;
+  const defaults = root.TaxIncomeDefaults;
+  const builtIn = preset && defaults
+    ? (defaults.years || ['2026']).reduce((state, year) => preset.prepareImport(state.records, state.profile, defaults.create(year)),
+      { records: [], profile: {} }) : null;
 
   const cents = value => Math.round(Number(value || 0) * 100);
   const amountText = value => value === '' ? '—' : Number(value).toFixed(2) + '元';
@@ -45,7 +47,7 @@
     }
     if (usingBuiltInIncome) {
       profile.incomeSummaryRemainders = { ...preset.normalizeRemainders(profile), ...structuredClone(builtIn.profile.incomeSummaryRemainders) };
-      profile.incomePreferredQuery = { year: builtIn.summary.year, types: [...ordinaryTypes] };
+      profile.incomePreferredQuery = { year: defaults.defaultYear || builtIn.summary.year, types: [...ordinaryTypes] };
       profile.taxDocumentEdited = true;
     }
     return profile;
@@ -72,7 +74,8 @@
     const records = state.records.filter(record => record.month.startsWith(year + '-') && types.includes(record.type))
       .sort((a, b) => b.month.localeCompare(a.month));
     const explicit = preset?.normalizeRemainders(state.profile)[year];
-    const included = explicit ? explicit.types.every(type => types.includes(type)) : null;
+    const hasBalance = explicit && (cents(explicit.income) !== 0 || cents(explicit.tax) !== 0);
+    const included = hasBalance ? explicit.types.every(type => types.includes(type)) : null;
     const remainder = {
       income: included ? preset.remainderForQuery(state.profile, year, types, 'income') : 0,
       tax: included ? preset.remainderForQuery(state.profile, year, types, 'tax') : 0

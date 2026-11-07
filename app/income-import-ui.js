@@ -17,7 +17,7 @@
  function openIncomeImport(initial=''){
   if(dialog){dialog.showModal();return;}
   dialog=document.createElement('dialog');dialog.className='data-backup-dialog income-import-dialog';dialog.setAttribute('aria-labelledby','income-import-title');
-  dialog.innerHTML='<header><h2 id="income-import-title">载入收入数据</h2><button type="button" class="backup-close" aria-label="关闭收入数据载入">×</button></header><div class="backup-body"><p>载入后可在“我的 → 我要咨询”修改。只替换选定年度的收入数据，保留其他年度、个人资料及已有申请；未保存的编辑不会带入。</p><label>选择收入数据文件<input type="file" class="income-preset-file" accept=".json,application/json"></label><label>或粘贴数据链接／JSON<textarea class="income-preset-text" rows="3" autocomplete="off" spellcheck="false"></textarea></label><button type="button" class="income-preset-preview">预览数据</button><div class="income-preset-review" hidden><pre></pre><p>“未展开明细合计”来自提供的总额减去已录入明细，不代表某个具体月份，也不会补造收入记录。该合计同样可以修改。</p><p class="income-preset-replace"></p><button type="button" class="income-preset-apply">确认载入</button></div><p class="backup-result" role="status" aria-live="polite"></p></div>';
+  dialog.innerHTML='<header><h2 id="income-import-title">载入收入数据</h2><button type="button" class="backup-close" aria-label="关闭收入数据载入">×</button></header><div class="backup-body"><p>载入后可在“我的 → 我要咨询”修改。只替换选定年度的收入数据，保留其他年度、个人资料及已有申请；未保存的编辑不会带入。</p><div class="income-default-options"></div><label>选择收入数据文件<input type="file" class="income-preset-file" accept=".json,application/json"></label><label>或粘贴数据链接／JSON<textarea class="income-preset-text" rows="3" autocomplete="off" spellcheck="false"></textarea></label><button type="button" class="income-preset-preview">预览数据</button><div class="income-preset-review" hidden><pre></pre><p>“未展开明细合计”来自提供的总额减去已录入明细，不代表某个具体月份，也不会补造收入记录。该合计同样可以修改。</p><p class="income-preset-replace"></p><button type="button" class="income-preset-apply">确认载入</button></div><p class="backup-result" role="status" aria-live="polite"></p></div>';
   document.body.append(dialog);
   const currentDialog=dialog,q=s=>currentDialog.querySelector(s),message=t=>q('.backup-result').textContent=t;
   let pending=null,readSequence=0;
@@ -31,6 +31,19 @@
     q('.income-preset-replace').textContent=`确认后替换当前${s.year}年的${oldCount}条记录，保留其他年度${prepared.records.length-s.rowsCount}条。载入前会在本机保留一份恢复快照。`;
     q('.income-preset-review').hidden=false;
    }catch(error){pending=null;message(error.message);}
+  }
+  const options=q('.income-default-options');
+  for(const year of window.TaxIncomeDefaults?.years || []){
+   const button=document.createElement('button');
+   button.type='button';
+   button.textContent=year+' 年默认明细';
+   button.onclick=()=>{
+    q('.income-preset-file').value='';
+    q('.income-preset-text').value='';
+    preview(JSON.stringify(TaxIncomeDefaults.create(year)));
+    q('.income-preset-review').scrollIntoView({block:'start'});
+   };
+   options.append(button);
   }
   const close=()=>{dialog.close();dialog.remove();dialog=null;};
   q('.backup-close').onclick=close;dialog.addEventListener('cancel',()=>{dialog.remove();dialog=null;});
@@ -72,6 +85,10 @@
   const entry=TaxIncomePreset.normalizeRemainders(taxpayerProfileData())[incomeQueryYear];
   if(!entry){priorHelp?.();return;}
   originalOpen('收入合计说明');
+  if(entry.income === '0.00' && entry.tax === '0.00'){
+   document.querySelector('.sheet p').textContent='合计为所选年度、所得类型下已录入的逐笔金额。';
+   return;
+  }
   const included=entry.types.every(t=>incomeQueryTypes.includes(t));
   document.querySelector('.sheet p').textContent=included?`合计包含已录入明细，以及尚未展开的收入${entry.income}元、税额${entry.tax}元。两部分都可在“我的 → 我要咨询”修改。未展开部分没有逐月明细，不作为纳税记录导出的明细。`:'本次筛选仅汇总已录入明细；未展开部分未提供各所得类型的拆分，因此没有计入此筛选合计。';
  };
