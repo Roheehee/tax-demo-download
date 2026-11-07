@@ -25,3 +25,34 @@ dialog::backdrop{background:#0005}
 dialog h2{margin:0;font-size:18px}
 dialog form{display:flex;justify-content:flex-end}
 dialog button{padding:6px 12px;color:#5286D0}
+
+/* The list remains the scrolling document underneath both pushed screens. */
+.document-list .income-summary { position: static; }
+.document-subview {
+  position: fixed;
+  inset: 47px 0 0;
+  z-index: 2;
+  width: min(100%, 402px);
+  margin-inline: auto;
+  display: flex;
+  overflow: hidden;
+  background: #f1f5f5;
+}
+#calculation { z-index: 3; }
+.document-subview[hidden], .document-bar button[hidden] { display: none; }
+.document-subview .flow-body {
+  min-height: 0;
+  overscroll-behavior-y: contain;
+  padding-bottom: calc(34rem + env(safe-area-inset-bottom, 0px));
+}
+#calculation .flow-body { padding-bottom: calc(84rem + env(safe-area-inset-bottom, 0px)); }
+html.income-subview-open { overflow: hidden; }
+.income-subview-open body { padding-top: 47px; }
+.income-subview-open .document-bar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 4;
+  padding-inline: max(16rem, calc((100% - 402px) / 2 + 16rem));
+}
+.income-subview-open #batch { margin-right: 0; }
+.document-bar h1:focus { outline: none; }

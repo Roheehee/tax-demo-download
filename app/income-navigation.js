@@ -59,14 +59,6 @@
     if (arrivedFrom('shell')) history.back();
     else location.replace(shellURL('income-query').href);
   }
-  function openDetail(id) {
-    putState({ taxIncomeScroll: window.scrollY });
-    visit(shellURL('income-detail/' + encodeURIComponent(String(id))), 'list');
-  }
-  function restoreListScroll() {
-    const y = history.state?.taxIncomeScroll;
-    if (isList && Number.isFinite(y)) requestAnimationFrame(() => window.scrollTo(0, y));
-  }
   function backFromDetail() {
     if (arrivedFrom('list')) history.back();
     else location.replace(listURL().href);
@@ -99,12 +91,9 @@
     if ((more.getAttribute('aria-expanded') === 'true') !== query.expanded) more.click();
     flowPage.querySelector('.flow-body').scrollTop = query.scroll || 0;
   }
-  window.TaxIncomeNavigation = Object.freeze({ openResults, fromQuery, forgetQuery, backFromResults, openDetail, restoreListScroll });
+  window.TaxIncomeNavigation = Object.freeze({ openResults, fromQuery, forgetQuery, backFromResults });
   acceptArrival();
-  if (isList) {
-    window.addEventListener('pageshow', restoreListScroll);
-    window.addEventListener('pagehide', () => putState({ taxIncomeScroll: window.scrollY }));
-  } else {
+  if (!isList) {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', restoreShell, { once: true });
     else restoreShell();
     window.addEventListener('pageshow', e => { if (e.persisted) restoreShell(); });

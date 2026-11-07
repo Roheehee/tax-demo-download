@@ -90,16 +90,41 @@
 
   // Return a fresh, read-only view of storage. Totals and applied remainders are integer cents.
   // remainderIncluded is null when the selected year has no remainder.
-  function read(options = {}) {
-    const state = loadState();
+  function read(options = {}, state = loadState()) {
     const year = validYear(options.year) ? options.year : state.year;
     const selected = Array.isArray(options.types)
       ? [...new Set(options.types.filter(type => types.includes(type)))] : state.types;
     return select(state, year, selected);
   }
 
+  function matchesReference(r){const original=legacyRecords.find(d=>d.id===r.id);return original&&['month','type','company','income','tax'].every(k=>r[k]===original[k]);}
+  const deductionFields=[['exemptIncome','本期免税收入'],['expense','本期减除费用'],['specialTotal','本期专项扣除合计'],['pension','基本养老保险'],['medical','基本医疗保险'],['unemployment','失业保险'],['housing','住房公积金'],['other','本期其他扣除'],['donation','本期准予扣除的捐赠项目']];
+  const deductionParts=['pension','medical','unemployment','housing'];
+  function referenceDeductions(r){
+   const d=Object.fromEntries(deductionFields.map(([key])=>[key,'']));
+   if(matchesReference(r)&&[0,3].includes(r.id))Object.assign(d,{exemptIncome:'0.00',expense:'3000.00',specialTotal:r.id===0?'620.00':'500.00'});
+   if(matchesReference(r)&&r.id===0)Object.assign(d,{pension:'300.00',medical:'100.00',unemployment:'20.00',housing:'200.00',other:'0.00',donation:'0.00'});
+   return d;
+  }
+  function recordDeductions(r){
+   const d={...referenceDeductions(r)};
+   for(const [key] of deductionFields)if(r.deductions&&Object.hasOwn(r.deductions,key))d[key]=String(r.deductions[key]??'');
+   if(deductionParts.every(key=>d[key]!==''))d.specialTotal=(deductionParts.reduce((sum,key)=>sum+cents(d[key]),0)/100).toFixed(2);
+   return d;
+  }
+  function referenceDeductionsUnchanged(r){
+   const actual=recordDeductions(r),original=referenceDeductions(r);
+   return deductionFields.every(([key])=>actual[key]===''?original[key]==='':original[key]!==''&&cents(actual[key])===cents(original[key]));
+  }
+  const taxRecordFields=[['declarationDate','申报日期'],['paidTax','实缴（退）金额'],['treasuryDate','入（退）库日期'],['taxOffice','入库税务机关'],['notes','备注']];
+  function recordTaxData(r){
+   const stored=r?.taxRecord&&typeof r.taxRecord==='object'&&!Array.isArray(r.taxRecord)?r.taxRecord:{};
+   return Object.fromEntries(taxRecordFields.map(([key])=>[key,String(stored[key]??'')]));
+  }
+
   root.TaxIncomeModel = Object.freeze({
     read, amountText, types, storageKey, cents, validRecord, loadState, select, readProfile,
+    matchesReference, deductionFields, deductionParts, recordDeductions, referenceDeductionsUnchanged, taxRecordFields, recordTaxData,
     legacyRecords: () => structuredClone(legacyRecords)
   });
 })(globalThis);

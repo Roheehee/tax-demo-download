@@ -8,14 +8,15 @@
   <link rel="manifest" href="manifest.webmanifest?v=28">
   <title>收入纳税明细</title>
   <link rel="stylesheet" href="income.css?v=5">
+  <link rel="stylesheet" href="flows.css?v=5">
   <link rel="stylesheet" href="typography.css?v=5">
   <link rel="stylesheet" href="income-refinement.css?v=34">
-  <link rel="stylesheet" href="income-view.css?v=35">
+  <link rel="stylesheet" href="income-view.css?v=42">
 </head>
 <body>
   <header class="document-bar">
     <a class="document-back" id="back" href="./" aria-label="返回上一页"><svg viewBox="0 0 10 19" aria-hidden="true"><path d="M9 1 1 9.5 9 18"/></svg>返回</a>
-    <h1>收入纳税明细</h1>
+    <h1 tabindex="-1">收入纳税明细</h1>
     <button id="batch" type="button">批量申诉</button>
   </header>
   <main class="income-page document-list">
@@ -25,11 +26,14 @@
     </section>
     <div class="income-records"></div>
   </main>
+  <main class="document-subview income-detail-flow" id="detail" aria-label="收入纳税明细详情" hidden><div class="flow-body"></div></main>
+  <main class="document-subview tax-calculation-flow" id="calculation" aria-label="税款计算" hidden><div class="flow-body"></div></main>
   <dialog aria-labelledby="notice-title"><h2 id="notice-title"></h2><p id="notice-message"></p><form method="dialog"><button>关闭</button></form></dialog>
   <script src="income-preset.js?v=25"></script>
   <script src="income-defaults.js?v=37"></script>
-  <script src="income-model.js?v=37"></script>
-  <script src="income-navigation.js?v=35"></script>
-  <script src="income-view.js?v=35"></script>
+  <script src="income-model.js?v=42"></script>
+  <script src="income-detail.js?v=42"></script>
+  <script src="income-navigation.js?v=42"></script>
+  <script src="income-view.js?v=42"></script>
   <script src="pwa.js"></script>
 </body></html>

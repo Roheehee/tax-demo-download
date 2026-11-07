@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v41-profile-background-20261107';
+const VERSION = 'v42-income-detail-20261107';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
@@ -56,6 +56,7 @@ const FILES = [
   "icons/apple-touch-icon.png",
   "income-refinement.css",
   "income-model.js",
+  "income-detail.js",
   "income-navigation.js",
   "income-view.css",
   "income-view.html",

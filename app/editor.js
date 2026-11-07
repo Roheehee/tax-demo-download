@@ -1,7 +1,6 @@
 // Competition demo: user edits stay in this browser/device.
 const incomeModel = TaxIncomeModel;
 const demoStorageKey = incomeModel.storageKey;
-const demoDefaults = incomeModel.legacyRecords();
 const demoTypes = incomeModel.types;
 const validDemoRecord = incomeModel.validRecord;
 const amountText = incomeModel.amountText;
@@ -26,33 +25,10 @@ function refreshDemoIncome(){
  const totals=incomePage.querySelectorAll('.total-line>span:last-child');
  ['income','tax'].forEach((k,i)=>totals[i].textContent=(result.totals[k]/100).toFixed(2)+'元');
 }
-function matchesReference(r){const original=demoDefaults.find(d=>d.id===r.id);return original&&['month','type','company','income','tax'].every(k=>r[k]===original[k]);}
-const deductionFields=[['exemptIncome','本期免税收入'],['expense','本期减除费用'],['specialTotal','本期专项扣除合计'],['pension','基本养老保险'],['medical','基本医疗保险'],['unemployment','失业保险'],['housing','住房公积金'],['other','本期其他扣除'],['donation','本期准予扣除的捐赠项目']];
-const deductionParts=['pension','medical','unemployment','housing'];
-function referenceDeductions(r){
- const d=Object.fromEntries(deductionFields.map(([key])=>[key,'']));
- if(matchesReference(r)&&[0,3].includes(r.id))Object.assign(d,{exemptIncome:'0.00',expense:'3000.00',specialTotal:r.id===0?'620.00':'500.00'});
- if(matchesReference(r)&&r.id===0)Object.assign(d,{pension:'300.00',medical:'100.00',unemployment:'20.00',housing:'200.00',other:'0.00',donation:'0.00'});
- return d;
-}
-function recordDeductions(r){
- const d={...referenceDeductions(r)};
- for(const [key] of deductionFields)if(r.deductions&&Object.hasOwn(r.deductions,key))d[key]=String(r.deductions[key]??'');
- if(deductionParts.every(key=>d[key]!==''))d.specialTotal=(deductionParts.reduce((sum,key)=>sum+cents(d[key]),0)/100).toFixed(2);
- return d;
-}
-function referenceDeductionsUnchanged(r){
- const actual=recordDeductions(r),original=referenceDeductions(r);
- return deductionFields.every(([key])=>actual[key]===''?original[key]==='':original[key]!==''&&cents(actual[key])===cents(original[key]));
-}
+const { deductionFields, deductionParts, recordDeductions, referenceDeductionsUnchanged, taxRecordFields, recordTaxData } = incomeModel;
 function deductionEditor(r){
  const d=recordDeductions(r);
  return `<details class="editor-deductions"><summary>本期收入与扣除数据</summary><p>金额单位为元。四项明细全部填写后，专项扣除合计自动相加；没有金额填0，仅知道合计时可直接填写。留空表示未提供。</p>${deductionFields.map(([key,label])=>`<label>${label}（元）<input name="deduction-${key}" type="number" min="0" step="0.01" inputmode="decimal" placeholder="未提供" value="${htmlEscape(d[key])}" ${key==='specialTotal'&&deductionParts.every(k=>d[k]!=='')?'readonly':''}></label>`).join('')}</details>`;
-}
-const taxRecordFields=[['declarationDate','申报日期'],['paidTax','实缴（退）金额'],['treasuryDate','入（退）库日期'],['taxOffice','入库税务机关'],['notes','备注']];
-function recordTaxData(r){
- const stored=r?.taxRecord&&typeof r.taxRecord==='object'&&!Array.isArray(r.taxRecord)?r.taxRecord:{};
- return Object.fromEntries(taxRecordFields.map(([key])=>[key,String(stored[key]??'')]));
 }
 function validTaxRecordDate(value){
  if(value==='')return true;
@@ -83,24 +59,15 @@ function persistDemoEditorData(records,profile){
  }
 }
 function showDemoDetail(r){
- const salary=r.type==='工资薪金'&&r.company==='示例科技有限公司'&&matchesReference(r);
- const september=r.id===0&&matchesReference(r),july=r.id===3&&matchesReference(r);
- const known=september||july;
- const fields=[['所得项目小类：',r.category],['扣缴义务人名称：',r.company],['扣缴义务人纳税人识别号：',salary?'DEMO（演示）':'—'],['主管税务机关：',salary?'示例税务机关':'—'],['申报渠道：',known?'其他':'—'],['申报日期：',recordTaxData(r).declarationDate||(september?'2026-10-01':july?'2026-08-01':'—')],['税款所属期：',r.month]];
- const d=recordDeductions(r);
- const deduction='<details class="special-deductions"><summary><span>本期专项扣除：</span><span>'+amountText(d.specialTotal)+'<i class="triangle" aria-hidden="true"></i></span></summary><div class="deduction-breakdown">'+deductionParts.map(key=>flowRow(deductionFields.find(([k])=>k===key)[1]+'：',amountText(d[key]))).join('')+'</div></details>';
- showFlow('收入纳税明细详情',`<section><h2 class="flow-heading">纳税明细信息</h2>${flowRow('收入：',amountText(r.income))}${flowRow('已申报税额：',amountText(r.tax))}<button class="flow-link tax-link">查看税款计算 <i class="link-chevron" aria-hidden="true"></i></button></section><section><h2 class="flow-heading">纳税明细-基础情况</h2>${fields.map(([k,v])=>flowRow(k,htmlEscape(v))).join('')}</section><div class="flow-note">温馨提示：专项附加扣除和个人养老金已体现在税款计算过程中，在本期数据中不予显示。您可在“税款计算-累计收入与扣除详情”中查看。<button class="flow-link tax-link">查看税款计算</button></div><section><h2 class="flow-heading">本期收入与扣除详情</h2>${flowRow('本期收入：',amountText(r.income))}${flowRow('本期免税收入：',amountText(d.exemptIncome))}${flowRow('本期减除费用：',amountText(d.expense))}${deduction}${flowRow('本期其他扣除：',amountText(d.other))}${flowRow('本期准予扣除的捐赠项目：',amountText(d.donation))}</section>`);
+ showFlow('收入纳税明细详情', TaxIncomeDetail.detail(r));
  flowPage.classList.add('income-detail-flow');
  flowPage.querySelectorAll('.tax-link').forEach(button=>button.onclick=()=>showDemoTaxCalculation(r,captureFlowView()));
 }
 function showDemoTaxCalculation(r,returnView){
- // No inferred cumulative data or tax calculation; preserve only the entered tax amount.
- const cumulative=['累计专项扣除：','累计专项附加扣除：','累计其他扣除：','累计个人养老金：','累计准予扣除的捐赠额：'].map(label=>[label,'—']);
- const calculation=['累计应纳税所得额：','税率/预扣率：','速算扣除数：','累计应纳税额：','累计已缴税额：','累计减免税额：'].map(label=>[label,'—']);
- showFlow('税款计算',`<section><h2 class="flow-heading">累计收入与扣除详情</h2>${cumulative.map(row=>flowRow(...row)).join('')}<div class="calculation-total">${flowRow('累计应纳税所得额：','—')}</div></section><section><h2 class="flow-heading">税款计算</h2>${calculation.map(row=>flowRow(...row)).join('')}<div class="calculation-total">${flowRow('本期申报税额：',amountText(r.tax))}</div></section><button class="policy-explanation">查看政策说明</button><p class="calculation-note">比赛演示：仅展示本机填写的申报税额，不进行税款计算；累计计算字段以“—”显示。</p>`);
+ showFlow('税款计算', TaxIncomeDetail.calculation(r, demoRecords));
  flowPage.classList.add('tax-calculation-flow');
  flowPage.querySelector('.flow-back').onclick=()=>restoreFlowView(returnView);
- flowPage.querySelector('.policy-explanation').onclick=()=>{open('政策说明');document.querySelector('.sheet p').textContent='本页面仅演示操作流程，不提供自动计税或税务政策判断。';};
+ flowPage.querySelector('.policy-explanation').onclick=()=>{open('政策说明');document.querySelector('.sheet p').textContent=TaxIncomeDetail.policyMessage;};
 }
 function showDemoEditor(){
  let draft=demoRecords.map(r=>({...structuredClone(r),deductions:recordDeductions(r),taxRecord:{...(r.taxRecord&&typeof r.taxRecord==='object'&&!Array.isArray(r.taxRecord)?r.taxRecord:{}),...recordTaxData(r)}})),year=incomeQueryYear;
