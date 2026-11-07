@@ -1,9 +1,19 @@
 'use strict';
-const VERSION = 'v44-income-colors-20261107';
+const VERSION = 'v45-fast-income-query-20261108';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
+// Match the exact asset revisions used by the income document. A newer shell
+// asking an older worker for a different revision must still reach the network.
+const INCOME_ASSETS = [
+  'income.css?v=5', 'flows.css?v=44', 'typography.css?v=44', 'income-refinement.css?v=44', 'income-view.css?v=44',
+  'income-preset.js?v=25', 'income-defaults.js?v=37', 'income-model.js?v=42', 'income-detail.js?v=42',
+  'income-navigation.js?v=42', 'income-view.js?v=42', 'pwa.js'
+];
+const INCOME_PAGE = new URL('income-view.html', BASE).href;
+const INCOME_ASSET_URLS = new Set(INCOME_ASSETS.map(file => new URL(file, BASE).href));
 const FILES = [
+  ...INCOME_ASSETS,
   "profile-display.js", "bank-card.css", "employment-page.css", "assets/profile-ui/cmb-mark.svg",
   "assets/home-ui/article-filing.png",
   "assets/home-ui/article-password.png",
@@ -12,8 +22,6 @@ const FILES = [
   "assets/home-ui/city-strip.png",
   "assets/home-ui/tax-record-banner.png",
 
-  "income-preset.js",
-  "income-defaults.js",
   "income-import-ui.js",
   "income-import.css",
   "profile-calibration.css",
@@ -47,27 +55,18 @@ const FILES = [
   "data-backup.js",
   "editor.css",
   "editor.js",
-  "flows.css",
   "flows.js",
   "home-refinement.css",
   "icons/app-192.png",
   "icons/app-512.png",
   "icons/app.svg",
   "icons/apple-touch-icon.png",
-  "income-refinement.css",
-  "income-model.js",
-  "income-detail.js",
-  "income-navigation.js",
-  "income-view.css",
   "income-view.html",
-  "income-view.js",
-  "income.css",
   "income.js",
   "index.html",
   "install.html",
   "manifest.webmanifest",
   "profile-refinement.css",
-  "pwa.js",
   "tabs-refinement.css",
   "tabs.css",
   "tabs.js",
@@ -75,14 +74,13 @@ const FILES = [
   "tax-document.js",
   "tax-records.css",
   "tax-records.js",
-  "typography.css"
 ];
 const URLS = FILES.map(file => new URL(file, BASE).href);
 const ALLOWED = new Map(URLS.map(url => [new URL(url).pathname, url]));
 const PAGES = new Map([
   [new URL('index.html', BASE).href, { clean: './', marker: 'app' }],
   [new URL('install.html', BASE).href, { clean: 'install', marker: 'install' }],
-  [new URL('income-view.html', BASE).href, { clean: 'income-view', marker: 'income' }]
+  [INCOME_PAGE, { clean: 'income-view', marker: 'income' }]
 ]);
 for (const [key, page] of PAGES) ALLOWED.set(new URL(page.clean, BASE).pathname, key);
 function resource(url) {
@@ -141,7 +139,8 @@ function prepare() {
 }
 async function ready() {
   const cache = await caches.open(CACHE);
-  return (await Promise.all(URLS.map(url => cache.match(url)))).every(Boolean);
+  const stored = new Set((await cache.keys()).map(request => request.url));
+  return URLS.every(url => stored.has(url));
 }
 self.addEventListener('install', event => {
   event.waitUntil(prepare().then(() => self.skipWaiting()));
@@ -167,7 +166,10 @@ self.addEventListener('fetch', event => {
   event.respondWith((async () => {
     try {
       const image = /\.(png|jpg|svg)$/.test(new URL(key).pathname);
-      if (image) {
+      // The result HTML is a static template; its script reads the current
+      // filters from location.search and reads the records on this device.
+      const preferCache = image || key === INCOME_PAGE || INCOME_ASSET_URLS.has(event.request.url);
+      if (preferCache) {
         try {
           const cached = await (await caches.open(CACHE)).match(key);
           if (cached) return cached;
@@ -176,9 +178,8 @@ self.addEventListener('fetch', event => {
         }
       }
       const response = await download(event.request.url, key);
-      if (image) {
-        // Keep validated images available even if a previous full-bundle prepare failed.
-        // A storage failure must not hide an image that already downloaded successfully.
+      if (preferCache) {
+        // Restore a missing entry only after validating the network response.
         const copy = response.clone();
         event.waitUntil(caches.open(CACHE).then(cache => cache.put(key, copy)).catch(() => {}));
       }
