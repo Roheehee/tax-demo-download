@@ -82,8 +82,8 @@
 
 /* The recording uses a bottom wheel; choosing a row is a draft until confirmed. */
 .income-query-flow .query-year-picker{
- position:absolute;inset:0;width:100%;padding:0 40rem 0 145rem;
- border:0;background:transparent;text-align:left;color:#333;font-size:18rem;
+ position:absolute;inset:0;width:100%;padding:0 40rem 0 137.6667rem;
+ border:0;background:transparent;text-align:left;color:#333;font:inherit;
 }
 .income-query-flow .query-year-picker:focus-visible{outline:2rem solid #a5ceff;outline-offset:-3rem}
 .year-picker-overlay{position:absolute;inset:0;z-index:5;background:#0008;display:flex;align-items:flex-end}

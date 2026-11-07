@@ -76,6 +76,24 @@
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 19'%3E%3Cpath d='M9 1 1 9.5 9 18' fill='none' stroke='%234984E1' stroke-width='1.5'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
 }
 
+/* Use the query action color for the complete back control. */
+.income-query-flow > .income-bar .flow-back,
+.web-shell .income-query-flow > .income-bar .flow-back {
+  color: var(--query-accent);
+}
+.income-query-flow .flow-back > .back-chevron {
+  border-color: currentColor;
+}
+.web-shell .income-query-flow .flow-back > .back-chevron {
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 19'%3E%3Cpath d='M9.5 1 1.5 9.5 9.5 18' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.web-shell .income-query-flow > .income-bar {
+  padding-top: 1px;
+  border-bottom-color: transparent;
+  box-shadow: 0 1px #e2e2e2;
+}
+
 .web-shell .flow-page > .income-bar .batch,
 .web-shell .flow-page > .income-bar .tax-document-close {
   position: static;
