@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v39-profile-pages-20261107';
+const VERSION = 'v40-identity-eye-20261107';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;

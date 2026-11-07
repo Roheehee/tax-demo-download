@@ -25,6 +25,20 @@
     localStorage.setItem(key,JSON.stringify(data));
     return true;
   }
+  const fullIdentityPattern = /^(?:\d{15}|\d{17}[\dX])$/;
+  function fullIdentity() {
+    const value = read().identity;
+    return typeof value === 'string' && fullIdentityPattern.test(value.toUpperCase()) ? value.toUpperCase() : '';
+  }
+  function setIdentity(value) {
+    const identity = value.trim().toUpperCase();
+    if (!fullIdentityPattern.test(identity)) throw new RangeError('请输入 15 或 18 位号码，最后一位可以是 X。');
+    const profile = stored();
+    profile.identity = identity;
+    delete profile.identityMask;
+    localStorage.setItem(key, JSON.stringify(profile));
+    return identity;
+  }
   function employers() {
     const values = read().employers;
     return Array.isArray(values) ? [...new Set(values.filter(s=>typeof s==='string').map(s=>s.trim()).filter(Boolean))] : [];
@@ -32,6 +46,6 @@
   window.TaxProfileDisplay = Object.freeze({
     name() { const n=read().name; return typeof n==='string' && n.trim() ? n.trim() : nameDefault; },
     identityMask() { const m=read().identityMask; return typeof m==='string' && /^\d(?:\*{13}|\*{16})[0-9X]$/.test(m) ? m : maskDefault; },
-    bankCards, setBankCards, employers
+    bankCards, setBankCards, employers, fullIdentity, setIdentity
   });
 })();

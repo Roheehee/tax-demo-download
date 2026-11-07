@@ -58,3 +58,37 @@
 .phone[data-active-tab="profile"]>.nav .nav-glyph{width:24.5rem;height:24.5rem;stroke-width:1.8}
 .phone[data-active-tab="profile"]>.nav button.active{color:#008dfc}
 .phone[data-active-tab="profile"]>.nav button.active .nav-outline{fill:#008dfc;stroke:#008dfc}
+
+.phone .identity-eye { position: relative; }
+.phone .identity-eye::after { content: ""; position: absolute; inset: 50% auto auto 50%; width: 44px; height: 44px; transform: translate(-50%, -50%); }
+.identity-setup {
+  box-sizing: border-box;
+  width: min(360px, calc(100vw - 32px));
+  max-height: 90dvh;
+  margin: auto;
+  padding: 22px;
+  border: 0;
+  border-radius: 14px;
+  background: #fff;
+  color: #303030;
+  font: 15px/1.5 -apple-system, BlinkMacSystemFont, sans-serif;
+}
+.identity-setup::backdrop { background: rgb(0 0 0 / 40%); }
+.identity-setup h2 { margin: 0; font-size: 18px; }
+.identity-setup p { margin: 8px 0 16px; color: #636b76; font-size: 14px; }
+.identity-setup label { display: block; margin-bottom: 5px; }
+.identity-setup input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid #bac4d0;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 16px;
+}
+.identity-setup [role="alert"] { color: #a6312b; margin: 6px 0; }
+.identity-setup [role="alert"]:empty { display: none; }
+.identity-actions { display: flex; gap: 10px; margin-top: 18px; }
+.identity-actions button { flex: 1; min-height: 44px; border-radius: 7px; font: inherit; background: #eaf0f6; color: #364457; }
+.identity-actions button[type="submit"] { background: #286bc2; color: white; }

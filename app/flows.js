@@ -2,6 +2,7 @@ const flowPage=document.createElement('section');flowPage.className='flow-page';
 let flowReturn=null;
 function closeFlow(){if(flowPage.matches('.income-query-flow.visible'))window.TaxIncomeNavigation?.forgetQuery();flowPage.classList.remove('visible');flowPage.inert=true;incomePage.inert=!incomePage.classList.contains('visible');if(!incomePage.classList.contains('visible'))renderTab(currentTab);document.querySelector('.nav').inert=incomePage.classList.contains('visible');}
 function showFlow(title,body,footer=''){
+ hideProfileIdentity();
  flowPage.classList.remove('income-detail-flow','tax-calculation-flow','income-query-flow','phone-verification-flow','employment-flow','bank-flow','tax-issue-flow','tax-requests-flow','tax-document-flow');
  flowPage.innerHTML=`<div class="flow-status">${statusMarkup.replace('11:59','12:08').replace('>76<','>74<')}</div><header class="income-bar"><button class="flow-back" aria-label="返回上一页"><i class="back-chevron"></i>返回</button><h1>${title}</h1>${title==='收入纳税明细详情'?'<button class="batch" data-title="申诉">申诉</button>':'<span></span>'}</header><div class="flow-body">${body}</div>${footer}`;
  flowPage.classList.add('visible');flowPage.inert=false;document.querySelector('.header').inert=true;document.querySelector('.scroll').inert=true;incomePage.inert=true;Object.values(tabPages).forEach(p=>p.inert=true);document.querySelector('.nav').inert=true;

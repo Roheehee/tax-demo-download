@@ -23,12 +23,7 @@ tabPages.profile.querySelector('.tab-top').insertAdjacentHTML('beforeend','<div 
 tabPages.profile.querySelector('.tab-top').insertAdjacentHTML('beforeend','<button class="personal-hit" data-title="个人信息" aria-label="个人信息">个人信息<i aria-hidden="true"></i></button>');
 // Profile identity is configured locally; never infer the hidden digits in a screenshot.
 const profileIdentityKey='tax-replica-profile-v1';
-function savedProfileFields() {
- try { return JSON.parse(localStorage.getItem(profileIdentityKey)) || {}; }
- catch { return {}; }
-}
-const savedIdentity = savedProfileFields().identity;
-let profileIdentity = typeof savedIdentity === 'string' && /^(?:\d{15}|\d{17}[\dX])$/.test(savedIdentity) ? savedIdentity : '';
+let profileIdentity = window.TaxProfileDisplay.fullIdentity();
 const profileNameLabel = tabPages.profile.querySelector('.profile-name');
 let profileIdentityVisible=false;
 tabPages.profile.querySelector('.tab-top').insertAdjacentHTML('beforeend',`<div class="profile-identity"><span>纳税人识别号</span><span class="identity-number" id="profile-identity-number"></span><button class="identity-eye" type="button" aria-label="显示纳税人识别号" aria-controls="profile-identity-number" aria-pressed="false"></button></div>`);
@@ -46,10 +41,72 @@ function renderProfileIdentity(){
  eye.setAttribute('aria-pressed',String(profileIdentityVisible));eye.setAttribute('aria-label',profileIdentityVisible?'隐藏纳税人识别号':'显示纳税人识别号');
  eye.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">${profileIdentityVisible?'<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"/><circle cx="12" cy="12" r="3"/>':'<path d="M3 9q9 8 18 0M5 11l-2 3m6-1-1 3m7-3 1 3m3-5 2 3"/>'}</svg>`;
 }
-tabPages.profile.querySelector('.identity-eye').onclick=()=>{
- if(!profileIdentity){open('设置演示号码');document.querySelector('.sheet p').textContent='请先在“我的 → 我要咨询”填写并保存演示号码，再点击小眼睛查看。';return;}
- profileIdentityVisible=!profileIdentityVisible;renderProfileIdentity();
+function hideProfileIdentity() {
+  if (profileIdentityVisible) {
+    profileIdentityVisible = false;
+    renderProfileIdentity();
+  }
+}
+function openIdentitySetup() {
+  const dialog = document.createElement('dialog');
+  dialog.className = 'identity-setup';
+  dialog.setAttribute('aria-labelledby', 'identity-setup-title');
+  dialog.innerHTML = `<form>
+    <h2 id="identity-setup-title">填写身份证号</h2>
+    <p id="identity-setup-note">保存在当前设备，下次点小眼睛即可查看。</p>
+    <label for="reveal-identity">身份证号</label>
+    <input id="reveal-identity" name="reveal-identity" type="text" maxlength="18"
+      autocomplete="off" autocapitalize="characters" spellcheck="false" required
+      placeholder="15 或 18 位，末位可为 X" aria-describedby="identity-setup-note identity-setup-error">
+    <p id="identity-setup-error" role="alert"></p>
+    <div class="identity-actions"><button type="button" class="identity-cancel">取消</button>
+      <button type="submit">保存并显示</button></div>
+  </form>`;
+  const input = dialog.querySelector('input');
+  const error = dialog.querySelector('[role="alert"]');
+  dialog.querySelector('.identity-cancel').onclick = () => dialog.close();
+  dialog.addEventListener('close', () => dialog.remove(), {once:true});
+  input.oninput = () => { error.textContent = ''; input.removeAttribute('aria-invalid'); };
+  dialog.querySelector('form').onsubmit = event => {
+    event.preventDefault();
+    try {
+      profileIdentity = window.TaxProfileDisplay.setIdentity(input.value);
+    } catch (failure) {
+      if (failure instanceof RangeError) {
+        error.textContent = failure.message;
+        input.setAttribute('aria-invalid', 'true');
+        input.focus();
+      } else {
+        error.textContent = '未能保存到此设备，请重试。';
+      }
+      return;
+    }
+    dialog.close();
+    profileIdentityVisible = true;
+    renderProfileIdentity();
+  };
+  document.body.append(dialog);
+  dialog.showModal();
+  input.focus();
+}
+tabPages.profile.querySelector('.identity-eye').onclick = () => {
+  if (!profileIdentity) {
+    openIdentitySetup();
+    return;
+  }
+  profileIdentityVisible = !profileIdentityVisible;
+  renderProfileIdentity();
 };
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) hideProfileIdentity();
+});
+window.addEventListener('pagehide', hideProfileIdentity);
+window.addEventListener('storage', event => {
+  if (event.key !== profileIdentityKey && event.key !== null) return;
+  profileIdentity = window.TaxProfileDisplay.fullIdentity();
+  profileIdentityVisible = false;
+  renderProfileIdentity();
+});
 tabPages.profile.querySelector('.tab-body').innerHTML=`<div class="profile-cards">${[['家庭成员','添加',47],['任职受雇','暂无',177],['银行卡','',306]].map(([title,n,x])=>`<button class="profile-card" data-title="${title}">${sprite('profile',x,293)}<h3>${title}</h3><span class="profile-chip">${n}</span></button>`).join('')}</div><div class="profile-menu">${[['♡','切换关怀版'],['♧','安全中心'],['♧','帮助中心'],['♧','我要咨询'],['ⓘ','关于&更新']].map(([icon,title],i)=>`<button data-title="${title}"><span class="menu-icon" style="display:block;height:25rem;background:url(assets/profile.svg) -32rem -${[433,479,525,571,617][i]}rem/402rem 874rem"></span>${title}<span class="chevron">›</span></button>`).join('')}</div><button class="logout" data-title="退出登录">退出登录</button>`;
 renderProfileIdentity();
 let unreadCount=6;let messageFilter='全部';
@@ -63,10 +120,10 @@ renderMessages();updateBadge();
 tabPages.messages.querySelector('.dismiss').onclick=()=>tabPages.messages.querySelector('.notification-note').style.visibility='hidden';
 tabPages.messages.querySelector('.clear-unread').onclick=()=>{messageData.forEach(m=>m.unread=false);unreadCount=0;updateBadge();renderMessages()};
 tabPages.messages.querySelector('.filter').onclick=()=>{open('筛选消息');document.querySelector('.sheet p').textContent='选择要查看的消息';const options=document.createElement('div');options.className='sheet-options';options.innerHTML='<button>全部</button><button>未读</button>';document.querySelector('.sheet p').after(options);options.querySelectorAll('button').forEach(b=>b.onclick=()=>{messageFilter=b.textContent;renderMessages();document.querySelector('.sheet-wrap').classList.remove('open');options.remove()})};
-const beforeTabsOpen=open;open=function(title){document.querySelector('.sheet-options')?.remove();document.querySelector('.sheet p').textContent='此入口的后续页面尚未提供截图，可继续补充后制作。';beforeTabsOpen(title)};
+const beforeTabsOpen=open;open=function(title){hideProfileIdentity();document.querySelector('.sheet-options')?.remove();document.querySelector('.sheet p').textContent='此入口的后续页面尚未提供截图，可继续补充后制作。';beforeTabsOpen(title)};
 let currentTab='home';
 function renderTab(key){
- if(key!==currentTab)profileIdentityVisible=false;
+ if(key!==currentTab)hideProfileIdentity();
  if(key==='profile')renderProfileIdentity();
  currentTab=key;phone.dataset.activeTab=key;for(const [id,p]of Object.entries(tabPages)){p.classList.toggle('current',id===key);p.inert=id!==key;p.setAttribute('aria-hidden',String(id!==key))}document.querySelector('.header').style.visibility=key==='home'?'':'hidden';document.querySelector('.scroll').style.visibility=key==='home'?'':'hidden';document.querySelector('.header').inert=key!=='home';document.querySelector('.scroll').inert=key!=='home';document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===(pageNames[key]||'首页')))}
 for(const b of document.querySelectorAll('[data-nav]'))b.onclick=()=>{const key=Object.keys(pageNames).find(k=>pageNames[k]===b.dataset.nav)||'home';history.replaceState({tab:key},'',key==='home'?location.pathname:'#'+key);setIncomeVisible(false);renderTab(key)};
