@@ -18,6 +18,26 @@ tabPages.todo.querySelector('.tab-top').insertAdjacentHTML('beforeend','<div cla
 tabPages.todo.querySelector('.tab-body').innerHTML='<div class="todo-tabs" role="tablist"><button class="selected" role="tab" aria-selected="true">未办结</button><button role="tab" aria-selected="false">已办结</button></div><div class="empty-illustration" role="img" aria-label="空文件夹插画"></div><p class="empty-label">暂无未办结事项</p>';
 tabPages.todo.querySelectorAll('.todo-tabs button').forEach(b=>b.onclick=()=>{tabPages.todo.querySelectorAll('.todo-tabs button').forEach(t=>{t.classList.toggle('selected',t===b);t.setAttribute('aria-selected',String(t===b))});tabPages.todo.querySelector('.empty-label').textContent=b.textContent==='未办结'?'暂无未办结事项':'暂无已办结事项'});
 tabPages.profile.querySelector('.tab-heading').remove();
+
+// A Home Screen Web Clip can exclude the status bar from its drawable viewport.
+// Measure the exclusion only for a full-width portrait window on iPhone.
+if (navigator.standalone && location.protocol !== 'file:') {
+  const profilePage = tabPages.profile;
+  function measureProfileInset() {
+    if (innerWidth > 600 || innerWidth !== screen.width || innerWidth >= innerHeight) {
+      delete profilePage.dataset.screenInset;
+      return;
+    }
+    const inset = screen.height - innerHeight;
+    if (inset < 0 || inset > 100) return;
+    profilePage.style.setProperty('--profile-screen-inset', inset + 'px');
+    profilePage.dataset.screenInset = inset > 0 ? 'clipped' : 'full';
+  }
+  measureProfileInset();
+  window.addEventListener('resize', measureProfileInset);
+  window.addEventListener('pageshow', measureProfileInset);
+}
+
 // Keep the profile header background and its editable identity separate.
 tabPages.profile.querySelector('.tab-top').insertAdjacentHTML('beforeend','<div class="profile-info-surface" aria-hidden="true"></div><span class="profile-name"></span>');
 tabPages.profile.querySelector('.tab-top').insertAdjacentHTML('beforeend','<button class="personal-hit" data-title="个人信息" aria-label="个人信息">个人信息<i aria-hidden="true"></i></button>');

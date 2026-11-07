@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v40-identity-eye-20261107';
+const VERSION = 'v41-profile-background-20261107';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
@@ -18,6 +18,7 @@ const FILES = [
   "income-import.css",
   "profile-calibration.css",
   "assets/profile-ui/arrow.png",
+  "assets/profile-ui/hero-top.png",
   "assets/profile-ui/hero.png",
   "assets/profile-ui/hero-left.png",
   "assets/profile-ui/hero-right.png",

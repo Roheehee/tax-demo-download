@@ -91,3 +91,37 @@
     right: calc(var(--tab-gutter) + 23rem);
   }
 }
+
+/* The reference artwork starts 52 design points below the physical screen top. */
+.web-shell .phone > .profile[data-screen-inset] {
+  --profile-origin: clamp(-10rem, 52rem - var(--profile-screen-inset), 52rem);
+  --profile-hero-height: calc(226.666667rem + var(--profile-origin));
+  /* Leave the crown of the portrait inside the drawable viewport. */
+  --portrait-origin: max(-2rem, var(--profile-origin));
+  --status-blue: #1573fa;
+}
+.web-shell .phone > .profile[data-screen-inset] > .tab-top {
+  background-color: var(--status-blue);
+  background-image: url(assets/profile-ui/hero-left.png), url(assets/profile-ui/hero-right.png);
+  background-size: 37rem 91rem;
+  background-position: left var(--tab-gutter, 0px) bottom, right var(--tab-gutter, 0px) bottom;
+}
+.web-shell .phone > .profile[data-screen-inset] > .tab-top::before {
+  height: calc(135.666667rem + var(--profile-origin));
+  background:
+    url(assets/profile-ui/hero.png) center var(--portrait-origin) / 402rem 135.666667rem no-repeat,
+    url(assets/profile-ui/hero-top.png) center calc(var(--portrait-origin) - 52rem) / 402rem 52rem no-repeat;
+  pointer-events: none;
+}
+/* iOS paints a single native tint outside an inset Web Clip. Match its edge,
+   then fade into the artwork, leaving the circular portrait unobscured. */
+.web-shell .phone > .profile[data-screen-inset="clipped"] > .tab-top::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 29rem;
+  background: linear-gradient(var(--status-blue) 0 1px, transparent);
+  mask-image: radial-gradient(circle at 50% calc(var(--portrait-origin) + 62.666667rem),
+    transparent 59rem, #000 61rem);
+  pointer-events: none;
+}

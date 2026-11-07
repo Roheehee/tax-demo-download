@@ -3,21 +3,21 @@
  height:calc(226.666667rem + var(--safe-top));
  background-color:#077afa;
  background-image:url(assets/profile-ui/hero.png),url(assets/profile-ui/hero-left.png),url(assets/profile-ui/hero-right.png);
- background-size:402rem 135.666667rem,23rem 91rem,23rem 91rem;
+ background-size:402rem 135.666667rem,37rem 91rem,37rem 91rem;
  background-position:center top,left bottom,right bottom;background-repeat:no-repeat;
 }
 .phone>.profile>.tab-top:before{background:linear-gradient(100deg,#0251fe,#057fff 50%,#88beff)}
 .phone .profile-info-surface{
- top:calc(135.666667rem + var(--safe-top));height:100rem;
+ top:calc(135.666667rem + var(--profile-origin, var(--safe-top)));height:100rem;
  background:linear-gradient(90deg,#fde6d0,#f5d5b7 50%,#edc69b);
 }
-.phone .profile-name{max-width:235rem;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;top:calc(158rem + var(--safe-top));font-size:14rem;line-height:21rem;font-weight:600;color:#1e1e20}
+.phone .profile-name{max-width:235rem;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;top:calc(158rem + var(--profile-origin, var(--safe-top)));font-size:14rem;line-height:21rem;font-weight:600;color:#1e1e20}
 .phone .profile .personal-hit{
- top:calc(157rem + var(--safe-top));width:81.333333rem;height:24rem;
+ top:calc(157rem + var(--profile-origin, var(--safe-top)));width:81.333333rem;height:24rem;
  font-size:12rem;line-height:18rem;gap:5rem;
  background:linear-gradient(100deg,#efb471,#e68e34);color:#fff9ed;
 }
-.phone .profile-identity{top:calc(178.333333rem + var(--safe-top));font-size:12rem;line-height:19rem;gap:4rem;color:#b57f4a;font-weight:500}
+.phone .profile-identity{top:calc(178.333333rem + var(--profile-origin, var(--safe-top)));font-size:12rem;line-height:19rem;gap:4rem;color:#b57f4a;font-weight:500}
 .phone .identity-eye{margin-left:9rem;color:#d38f49}
 .phone .identity-eye svg{width:21rem;height:21rem}
 .phone .identity-number{font-size:12.5rem;font-weight:500;letter-spacing:.2rem}
