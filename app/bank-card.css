@@ -1,0 +1,119 @@
+.flow-page.bank-flow {
+  background: #f4f5f9;
+}
+
+.bank-flow .bank-card {
+  height: 83rem;
+  margin: 33.333rem 17rem 0;
+  padding: 0 17rem;
+  gap: 30rem;
+  border-radius: 9rem;
+  color: #333;
+}
+
+.bank-brand-mark {
+  width: 52rem;
+  height: 52rem;
+  flex: none;
+  position: relative;
+  top: 1.667rem;
+}
+
+.bank-flow .bank-card p:first-child {
+  font-size: 17rem;
+  line-height: 24rem;
+}
+
+.bank-flow .bank-card p.bank-card-number {
+  font-size: 15rem;
+  line-height: 22rem;
+  white-space: nowrap;
+}
+
+.phone .bank-flow .bank-footer {
+  flex: none;
+  padding: 12.667rem 8.875% max(35rem, var(--safe-bottom, 0px));
+}
+
+.bank-flow .bank-footer .flow-primary {
+  width: 100%;
+  height: 49rem;
+  margin: 0;
+  border-radius: 4rem;
+  font-size: 17rem;
+  background: #4286f5;
+}
+
+.bank-flow .bank-card + .bank-card {
+  margin-top: 12rem;
+}
+
+.bank-flow .bank-card > div {
+  min-width: 0;
+}
+
+.bank-card-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.neutral-bank {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #edf3fa;
+  color: #5981af;
+}
+
+.neutral-bank::before {
+  content: "";
+  box-sizing: border-box;
+  width: 29rem;
+  height: 20rem;
+  border: 2rem solid currentColor;
+  border-radius: 4rem;
+  background: linear-gradient(to bottom, transparent 3rem, currentColor 3rem 6rem, transparent 6rem);
+}
+
+.bank-empty {
+  margin: 35rem 17rem;
+  text-align: center;
+  color: #666;
+}
+
+.bank-entry-form {
+  margin: 26rem 17rem;
+  padding: 18rem;
+  background: #fff;
+  border-radius: 9rem;
+}
+
+.bank-entry-form label {
+  display: block;
+  color: #333;
+  font-size: 15rem;
+}
+
+.bank-entry-form label + label {
+  margin-top: 16rem;
+}
+
+.bank-entry-form input {
+  width: 100%;
+  margin-top: 6rem;
+  padding: 10rem;
+  border: 1px solid #d7dce4;
+  border-radius: 5rem;
+  font: inherit;
+  font-size: 16px;
+}
+
+.bank-entry-error {
+  margin: 12rem 0 0;
+  color: #a52e28;
+}
+
+.bank-entry-error:empty {
+  display: none;
+}

@@ -1,0 +1,65 @@
+/* The shared flow header already accounts for the system status bar. */
+.phone .employment-flow > .flow-body {
+  padding: 0;
+  background: #f4f5f9;
+}
+
+.employment-flow > .flow-body:has(> .employment-empty)::before {
+  content: "";
+  display: block;
+  height: min(26.14%, 200rem);
+}
+
+.employment-flow .employment-empty {
+  width: min(312rem, calc(100% - 32rem));
+  margin: 0 auto;
+  background: transparent;
+  padding-bottom: calc(20rem + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+}
+
+.employment-building {
+  display: block;
+  width: 81.333rem;
+  height: 81.333rem;
+  margin-inline: auto;
+}
+
+.employment-empty h2 {
+  margin: 26rem 0 0;
+  color: #56575d;
+  font-size: 14.85rem;
+  font-weight: 400;
+  line-height: 21rem;
+}
+
+.employment-empty p {
+  margin: 9rem 0 0;
+  color: #999a9e;
+  font-size: 12.85rem;
+  font-weight: 400;
+  line-height: 19rem;
+}
+
+.employment-list {
+  margin: 0;
+  padding: 18rem 16rem calc(20rem + env(safe-area-inset-bottom, 0px));
+  list-style: none;
+}
+
+.employment-list li {
+  margin-bottom: 10rem;
+  border-radius: 8rem;
+  padding: 18rem;
+  background: #fff;
+  color: #333;
+  font-size: 16rem;
+  line-height: 23rem;
+  overflow-wrap: anywhere;
+}
+
+.profile .profile-chip.has-employers {
+  background: #417ff1;
+  border-color: #417ff1;
+  color: #fff;
+}

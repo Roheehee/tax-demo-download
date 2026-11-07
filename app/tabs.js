@@ -4,7 +4,7 @@ const pageNames={todo:'待办',services:'办&查',messages:'消息',profile:'我
 const tabPages={};
 for(const [key,name] of Object.entries(pageNames)){
  const p=document.createElement('section');p.className='tab-page '+key;p.setAttribute('aria-label',name);p.inert=true;
- p.innerHTML=`<div class="tab-top">${statusMarkup}<div class="tab-heading"><h1>${name}</h1>${key==='todo'?'<small>请及时办理相关业务并确认办结情况</small>':key==='services'?'<small>请选择您需要办理或查询的事项</small>':''}</div></div><main class="tab-body"></main>`;
+ p.innerHTML=`<div class="tab-top">${key==='profile'?'':statusMarkup}<div class="tab-heading"><h1>${name}</h1>${key==='todo'?'<small>请及时办理相关业务并确认办结情况</small>':key==='services'?'<small>请选择您需要办理或查询的事项</small>':''}</div></div><main class="tab-body"></main>`;
  phone.insertBefore(p,document.querySelector('.nav'));tabPages[key]=p;
 }
 function sprite(file,x,y){return `<span class="sprite-icon" style="background-image:url(assets/${file}.${file==='profile'?'svg':'jpg'});background-position:-${x}rem -${y}rem"></span>`}
@@ -19,19 +19,29 @@ tabPages.todo.querySelector('.tab-body').innerHTML='<div class="todo-tabs" role=
 tabPages.todo.querySelectorAll('.todo-tabs button').forEach(b=>b.onclick=()=>{tabPages.todo.querySelectorAll('.todo-tabs button').forEach(t=>{t.classList.toggle('selected',t===b);t.setAttribute('aria-selected',String(t===b))});tabPages.todo.querySelector('.empty-label').textContent=b.textContent==='未办结'?'暂无未办结事项':'暂无已办结事项'});
 tabPages.profile.querySelector('.tab-heading').remove();
 // Keep the profile header background and its editable identity separate.
-tabPages.profile.querySelector('.tab-top').insertAdjacentHTML('beforeend','<div class="profile-info-surface" aria-hidden="true"></div><span class="profile-name">演示用户</span>');
-const profileStatus=tabPages.profile.querySelector('.status');
-profileStatus.innerHTML=profileStatus.innerHTML.replace('11:59','17:53').replace('>76<','>35<').replace('<span>5G</span>','<svg class="profile-wifi" viewBox="0 0 20 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M2 5q8-7 16 0M5 8q5-4 10 0M8 11q2-2 4 0"/><circle cx="10" cy="14" r="1" fill="currentColor" stroke="none"/></svg>');
+tabPages.profile.querySelector('.tab-top').insertAdjacentHTML('beforeend','<div class="profile-info-surface" aria-hidden="true"></div><span class="profile-name"></span>');
 tabPages.profile.querySelector('.tab-top').insertAdjacentHTML('beforeend','<button class="personal-hit" data-title="个人信息" aria-label="个人信息">个人信息<i aria-hidden="true"></i></button>');
 // Profile identity is configured locally; never infer the hidden digits in a screenshot.
 const profileIdentityKey='tax-replica-profile-v1';
-let profileIdentity='';
-try{const saved=JSON.parse(localStorage.getItem(profileIdentityKey));if(/^(?:\d{15}|\d{17}[\dX])$/.test(saved?.identity))profileIdentity=saved.identity;}catch{}
+function savedProfileFields() {
+ try { return JSON.parse(localStorage.getItem(profileIdentityKey)) || {}; }
+ catch { return {}; }
+}
+const savedIdentity = savedProfileFields().identity;
+let profileIdentity = typeof savedIdentity === 'string' && /^(?:\d{15}|\d{17}[\dX])$/.test(savedIdentity) ? savedIdentity : '';
+const profileNameLabel = tabPages.profile.querySelector('.profile-name');
 let profileIdentityVisible=false;
 tabPages.profile.querySelector('.tab-top').insertAdjacentHTML('beforeend',`<div class="profile-identity"><span>纳税人识别号</span><span class="identity-number" id="profile-identity-number"></span><button class="identity-eye" type="button" aria-label="显示纳税人识别号" aria-controls="profile-identity-number" aria-pressed="false"></button></div>`);
 function renderProfileIdentity(){
+ const bankChip=tabPages.profile.querySelector('[data-title="银行卡"] .profile-chip');
+ bankChip.textContent = window.TaxProfileDisplay.bankCards().length + '张';
+ const employmentChip = tabPages.profile.querySelector('[data-title="任职受雇"] .profile-chip');
+ const employerCount = window.TaxProfileDisplay?.employers?.().length ?? 0;
+ employmentChip.textContent = employerCount ? employerCount + '家' : '暂无';
+ employmentChip.classList.toggle('has-employers', employerCount > 0);
+ profileNameLabel.textContent = window.TaxProfileDisplay.name();
  const number=tabPages.profile.querySelector('.identity-number');
- number.textContent=profileIdentityVisible?profileIdentity:profileIdentity?profileIdentity[0]+'*'.repeat(profileIdentity.length-2)+profileIdentity.slice(-1):'******************';
+ number.textContent=profileIdentityVisible?profileIdentity:profileIdentity?profileIdentity[0]+'*'.repeat(profileIdentity.length-2)+profileIdentity.slice(-1):globalThis.TaxProfileDisplay?.identityMask() || '******************';
  const eye=tabPages.profile.querySelector('.identity-eye');
  eye.setAttribute('aria-pressed',String(profileIdentityVisible));eye.setAttribute('aria-label',profileIdentityVisible?'隐藏纳税人识别号':'显示纳税人识别号');
  eye.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">${profileIdentityVisible?'<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z"/><circle cx="12" cy="12" r="3"/>':'<path d="M3 9q9 8 18 0M5 11l-2 3m6-1-1 3m7-3 1 3m3-5 2 3"/>'}</svg>`;
@@ -40,8 +50,8 @@ tabPages.profile.querySelector('.identity-eye').onclick=()=>{
  if(!profileIdentity){open('设置演示号码');document.querySelector('.sheet p').textContent='请先在“我的 → 我要咨询”填写并保存演示号码，再点击小眼睛查看。';return;}
  profileIdentityVisible=!profileIdentityVisible;renderProfileIdentity();
 };
+tabPages.profile.querySelector('.tab-body').innerHTML=`<div class="profile-cards">${[['家庭成员','添加',47],['任职受雇','暂无',177],['银行卡','',306]].map(([title,n,x])=>`<button class="profile-card" data-title="${title}">${sprite('profile',x,293)}<h3>${title}</h3><span class="profile-chip">${n}</span></button>`).join('')}</div><div class="profile-menu">${[['♡','切换关怀版'],['♧','安全中心'],['♧','帮助中心'],['♧','我要咨询'],['ⓘ','关于&更新']].map(([icon,title],i)=>`<button data-title="${title}"><span class="menu-icon" style="display:block;height:25rem;background:url(assets/profile.svg) -32rem -${[433,479,525,571,617][i]}rem/402rem 874rem"></span>${title}<span class="chevron">›</span></button>`).join('')}</div><button class="logout" data-title="退出登录">退出登录</button>`;
 renderProfileIdentity();
-tabPages.profile.querySelector('.tab-body').innerHTML=`<div class="profile-cards">${[['家庭成员','添加',47],['任职受雇','1家',177],['银行卡','1张',306]].map(([title,n,x])=>`<button class="profile-card" data-title="${title}">${sprite('profile',x,293)}<h3>${title}</h3><span class="profile-chip">${n}</span></button>`).join('')}</div><div class="profile-menu">${[['♡','切换关怀版'],['♧','安全中心'],['♧','帮助中心'],['♧','我要咨询'],['ⓘ','关于&更新']].map(([icon,title],i)=>`<button data-title="${title}"><span class="menu-icon" style="display:block;height:25rem;background:url(assets/profile.svg) -32rem -${[433,479,525,571,617][i]}rem/402rem 874rem"></span>${title}<span class="chevron">›</span></button>`).join('')}</div><button class="logout" data-title="退出登录">退出登录</button>`;
 let unreadCount=6;let messageFilter='全部';
 const dates=['2026-10-01','2026-09-01','2026-08-01','2026-07-01','2026-06-01','2026-05-01','2026-04-01'];
 const messageData=dates.map((date,i)=>({date,unread:i>1,title:'扣缴申报温馨提示',text:i%2===0?'示例科技有限公司的演示消息':'示例服务有限公司的演示消息'}));
@@ -55,7 +65,10 @@ tabPages.messages.querySelector('.clear-unread').onclick=()=>{messageData.forEac
 tabPages.messages.querySelector('.filter').onclick=()=>{open('筛选消息');document.querySelector('.sheet p').textContent='选择要查看的消息';const options=document.createElement('div');options.className='sheet-options';options.innerHTML='<button>全部</button><button>未读</button>';document.querySelector('.sheet p').after(options);options.querySelectorAll('button').forEach(b=>b.onclick=()=>{messageFilter=b.textContent;renderMessages();document.querySelector('.sheet-wrap').classList.remove('open');options.remove()})};
 const beforeTabsOpen=open;open=function(title){document.querySelector('.sheet-options')?.remove();document.querySelector('.sheet p').textContent='此入口的后续页面尚未提供截图，可继续补充后制作。';beforeTabsOpen(title)};
 let currentTab='home';
-function renderTab(key){if(key!==currentTab){profileIdentityVisible=false;renderProfileIdentity()}currentTab=key;phone.dataset.activeTab=key;for(const [id,p]of Object.entries(tabPages)){p.classList.toggle('current',id===key);p.inert=id!==key;p.setAttribute('aria-hidden',String(id!==key))}document.querySelector('.header').style.visibility=key==='home'?'':'hidden';document.querySelector('.scroll').style.visibility=key==='home'?'':'hidden';document.querySelector('.header').inert=key!=='home';document.querySelector('.scroll').inert=key!=='home';document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===(pageNames[key]||'首页')))}
+function renderTab(key){
+ if(key!==currentTab)profileIdentityVisible=false;
+ if(key==='profile')renderProfileIdentity();
+ currentTab=key;phone.dataset.activeTab=key;for(const [id,p]of Object.entries(tabPages)){p.classList.toggle('current',id===key);p.inert=id!==key;p.setAttribute('aria-hidden',String(id!==key))}document.querySelector('.header').style.visibility=key==='home'?'':'hidden';document.querySelector('.scroll').style.visibility=key==='home'?'':'hidden';document.querySelector('.header').inert=key!=='home';document.querySelector('.scroll').inert=key!=='home';document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===(pageNames[key]||'首页')))}
 for(const b of document.querySelectorAll('[data-nav]'))b.onclick=()=>{const key=Object.keys(pageNames).find(k=>pageNames[k]===b.dataset.nav)||'home';history.replaceState({tab:key},'',key==='home'?location.pathname:'#'+key);setIncomeVisible(false);renderTab(key)};
 const previousIncomeVisible=setIncomeVisible;setIncomeVisible=function(visible){previousIncomeVisible(visible);if(visible){Object.values(tabPages).forEach(p=>p.inert=true)}else{renderTab(currentTab)}};
 window.addEventListener('popstate',()=>{const hash=location.hash.slice(1);if(hash!=='income'){renderTab(tabPages[hash]?hash:'home');setIncomeVisible(false)}});

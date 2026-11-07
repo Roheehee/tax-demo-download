@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 154 154">
+  <defs>
+    <clipPath id="disc"><circle cx="77" cy="77" r="77"/></clipPath>
+  </defs>
+  <g clip-path="url(#disc)">
+    <circle cx="77" cy="77" r="77" fill="#e60012"/>
+    <path fill="white" fill-rule="evenodd"
+      d="M14 109 54 7 76 59 97 7 140 107H154L129 132H34ZM27 108H70L48 55ZM71 108H113L91 55Z"/>
+    <path fill="white"
+      d="M116 55h40v4h-40z M119 62h37v5h-37z M122 70h34v4h-34z M125 77h31v5h-31z M128 85h28v4h-28z M131 92h25v4h-25z M134 99h22v5h-22z"/>
+  </g>
+</svg>

@@ -17,8 +17,110 @@ function restoreFlowView(view){
 }
 const flowRow=(label,value)=>`<div class="flow-row"><label>${label}</label><span>${value}</span></div>`;
 function showVerification(){showFlow('手机验证','<div class="phone-intro">为了账号安全性，点击获取验证码，<br>发送短信验证至以下手机<strong>演示号码（未绑定）</strong></div><div class="code-row"><span>短信验证码</span><input inputmode="numeric" maxlength="6" placeholder="请输入短信验证码" aria-label="短信验证码"><button class="get-code">获取验证码</button></div><button class="flow-primary next" disabled>下一步</button>');flowPage.classList.add('phone-verification-flow');flowPage.querySelector('.get-code').onclick=()=>{originalOpen('验证码演示');document.querySelector('.sheet p').textContent='此版本仅做本地演示，不发送短信。可以输入任意六位数字查看按钮状态。'};flowPage.querySelector('input').oninput=e=>flowPage.querySelector('.next').disabled=!/^\d{6}$/.test(e.target.value);flowPage.querySelector('.next').onclick=()=>recordingPlaceholder('验证后页面');}
-function showEmployer(){showFlow('任职受雇','<div class="employer-card"><h2>示例科技有限公司</h2><p>统一社会信用代码：DEMO（演示）</p><p>职务：-</p><p>任职受雇日期：2026-07-01</p><p>离职日期：-</p></div>');flowPage.classList.add('employment-flow');}
-function showBanks(){showFlow('银行卡','<div class="bank-card"><div class="bank-logo">◬</div><div><p>演示银行卡</p><p>**** **** **** ****</p></div></div>','<footer class="bank-footer"><button class="flow-primary" data-title="添加银行卡">添加</button></footer>');flowPage.classList.add('bank-flow');}
+function showEmployer() {
+  const employers = window.TaxProfileDisplay?.employers?.() ?? [];
+  if (employers.length) {
+    showFlow('任职受雇', '<ul class="employment-list" aria-label="任职单位"></ul>');
+    flowPage.classList.add('employment-flow');
+    const list = flowPage.querySelector('.employment-list');
+    for (const employer of employers) {
+      const row = document.createElement('li');
+      row.textContent = employer;
+      list.append(row);
+    }
+    return;
+  }
+
+  showFlow('任职受雇', `
+    <section class="employment-empty" aria-labelledby="employment-empty-title">
+      <svg class="employment-building" viewBox="0 0 82 82" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="employment-wings">
+            <stop stop-color="#dee9ff"/><stop offset="1" stop-color="#adccfa"/>
+          </linearGradient>
+          <linearGradient id="employment-tower" x2="1" y2=".15">
+            <stop stop-color="#659df4"/><stop offset="1" stop-color="#836bd8"/>
+          </linearGradient>
+          <linearGradient id="employment-base">
+            <stop stop-color="#679df3"/><stop offset="1" stop-color="#8b64ce"/>
+          </linearGradient>
+          <pattern id="employment-windows" x="23.6" y="31.8" width="9.45" height="12.5" patternUnits="userSpaceOnUse">
+            <rect width="6.3" height="6.3" fill="#f2f7f2"/>
+          </pattern>
+        </defs>
+        <path d="M0 76V33q0-6 6-6h70q6 0 6 6v43z" fill="url(#employment-wings)"/>
+        <path d="M11.4 38h59.2v5.7H11.4zm0 12h59.2v5.7H11.4zm0 12h59.2v5.7H11.4z" fill="#f2f7f2"/>
+        <path d="M18.8 76V6q0-6 6-6h32.5q6 0 6 6v70z" fill="url(#employment-tower)"/>
+        <path d="M23.6 13h16v10h-16z" fill="#f2f7f2"/>
+        <rect x="23.6" y="31.8" width="35" height="43.8" fill="url(#employment-windows)"/>
+        <path d="M0 75.5h82V82H0z" fill="url(#employment-base)"/>
+      </svg>
+      <h2 id="employment-empty-title">当前没有信息</h2>
+      <p>此处若未显示您的任职单位，可能是因为您的任职单位尚未向主管税务机关报送您的任职信息或报送错误。请您与单位财务人员联系，及时为您准确报送任职信息。若仍有疑问，请您或单位财务人员与主管税务机关联系。</p>
+    </section>`);
+  flowPage.classList.add('employment-flow');
+}
+function showBanks(focusLastCard = false) {
+  const profile = window.TaxProfileDisplay;
+  const footer = '<footer class="bank-footer"><button type="button" class="flow-primary bank-add">添加</button></footer>';
+  showFlow('银行卡', '', footer);
+  flowPage.classList.add('bank-flow');
+  const body = flowPage.querySelector('.flow-body');
+  for (const {name, lastFour} of profile.bankCards()) {
+    const card = document.createElement('article');
+    card.className = 'bank-card';
+    const logo = name === '招商银行'
+      ? '<img class="bank-brand-mark" src="assets/profile-ui/cmb-mark.svg" alt="">'
+      : '<span class="bank-brand-mark neutral-bank" aria-hidden="true"></span>';
+    card.innerHTML = logo + '<div><p class="bank-card-title"></p><p class="bank-card-number"></p></div>';
+    card.querySelector('.bank-card-title').textContent = name;
+    card.querySelector('.bank-card-number').textContent = '**** **** **** ' + lastFour;
+    body.append(card);
+  }
+  if (!body.childElementCount) body.innerHTML = '<p class="bank-empty">暂无银行卡</p>';
+  flowPage.querySelector('.bank-add').onclick = showAddBank;
+  if (focusLastCard) {
+    const card = body.lastElementChild;
+    card.tabIndex = -1;
+    card.focus();
+  }
+}
+
+function showAddBank() {
+  const previous = captureFlowView();
+  const formMarkup = `<form class="bank-entry-form" id="bank-entry" autocomplete="off">
+    <label>银行名称<input name="bank-name" type="text" maxlength="80" required></label>
+    <label>卡号后四位<input name="bank-last-four" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" required></label>
+    <p class="bank-entry-error" role="alert"></p>
+  </form>`;
+  const footer = '<footer class="bank-footer"><button form="bank-entry" type="submit" class="flow-primary">保存</button></footer>';
+  showFlow('添加演示银行卡', formMarkup, footer);
+  flowPage.classList.add('bank-flow');
+  const form = flowPage.querySelector('.bank-entry-form');
+  const bankName = form.elements.namedItem('bank-name');
+  const lastFour = form.elements.namedItem('bank-last-four');
+  flowPage.querySelector('.flow-back').onclick = () => {
+    restoreFlowView(previous);
+    flowPage.querySelector('.bank-add').focus({preventScroll: true});
+  };
+  form.onsubmit = event => {
+    event.preventDefault();
+    const name = bankName.value.trim();
+    if (!name) {
+      bankName.value = '';
+      bankName.reportValidity();
+      return;
+    }
+    const profile = window.TaxProfileDisplay;
+    try {
+      profile.setBankCards([...profile.bankCards(), {name, lastFour: lastFour.value}]);
+    } catch {
+      form.querySelector('.bank-entry-error').textContent = '未能保存到此设备，请重试。';
+      return;
+    }
+    showBanks(true);
+  };
+}
 function showIncomeYearPicker(select,trigger){
  const years=[...select.options].map(option=>option.value);
  let pending=select.value;

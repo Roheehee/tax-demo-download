@@ -108,8 +108,19 @@ function showDemoEditor(){
  const summaryDraft=window.TaxIncomePreset?TaxIncomePreset.normalizeRemainders(profile):{};
  const recordYears=new Map(draft.map(r=>[r.id,r.month.slice(0,4)]));
  const years=[...new Set(['2026','2025',year,...Object.keys(summaryDraft),...draft.map(r=>r.month.slice(0,4))])].sort().reverse();
- showFlow('修改演示数据',`<p class="editor-note">比赛演示数据 · 默认载入已选收入数据 · 修改仅保存到当前设备<br>按年度编辑，可为同一月份添加多条记录。</p><form id="demo-editor"><section class="edit-card"><h2>我的 · 纳税人信息</h2><label>纳税人姓名<input name="profile-name" type="text" autocomplete="off" maxlength="80" placeholder="填写演示姓名" value="${htmlEscape(profile.name)}"></label><label>演示号码<input name="profile-identity" type="text" autocomplete="off" maxlength="18" placeholder="填写15位或18位演示号码" value="${htmlEscape(profileIdentity)}"></label></section><section class="edit-card editor-toolbar"><label>编辑年度<select name="editor-year">${years.map(y=>`<option ${y===year?'selected':''}>${y}</option>`).join('')}</select></label><button type="button" class="add-income">＋ 新增收入记录</button><button type="button" class="load-income">载入收入数据</button><button type="button" class="delete-month">删除月份</button><p class="year-count" role="status"></p></section><section class="edit-card income-summary-editor" hidden></section><div class="editor-records"></div><p class="editor-note">切换年份会保留尚未保存的填写内容。点击“保存修改”同时保存所有年份；收入明细按查询年份显示。合计汇总当前查询条件下的记录；如有未展开明细合计，也会按其适用类型计入。</p><p class="editor-note">保存后，已有申请的预览、放大和再次下载也使用最新数据；已下载的旧图片需重新下载。</p></form><dialog class="delete-month-dialog" aria-labelledby="delete-month-title"><h2 id="delete-month-title">删除月份</h2><label>选择月份<select name="delete-month" aria-describedby="delete-month-info"></select></label><p id="delete-month-info" role="status"></p><div class="month-actions"><button type="button" class="cancel-month">取消</button><button type="button" class="confirm-month" disabled>确认删除</button></div></dialog>`,'<footer class="editor-footer"><span class="editor-result" role="status"></span><button class="flow-primary" type="submit" form="demo-editor">保存修改</button></footer>');
+ showFlow('修改演示数据',`<p class="editor-note">比赛演示数据 · 默认载入已选收入数据 · 修改仅保存到当前设备<br>按年度编辑，可为同一月份添加多条记录。</p><form id="demo-editor"><section class="edit-card"><h2>我的 · 纳税人信息</h2><label>纳税人姓名<input name="profile-name" type="text" autocomplete="off" maxlength="80" placeholder="填写演示姓名" value="${htmlEscape(TaxProfileDisplay.name())}"></label><label>演示号码<input name="profile-identity" type="text" autocomplete="off" maxlength="18" placeholder="可只填首尾，中间用星号" value="${htmlEscape(profileIdentity || TaxProfileDisplay.identityMask())}"></label><label>任职单位（每行一家，留空显示“暂无”）<textarea name="profile-employers" rows="2" class="profile-employers" placeholder="填写单位名称">${htmlEscape(TaxProfileDisplay.employers().join('\n'))}</textarea></label></section><section class="edit-card"><h2>我的 · 银行卡</h2><div class="profile-bank-rows"></div><button class="profile-add-card" type="button">＋ 添加银行卡</button></section><section class="edit-card editor-toolbar"><label>编辑年度<select name="editor-year">${years.map(y=>`<option ${y===year?'selected':''}>${y}</option>`).join('')}</select></label><button type="button" class="add-income">＋ 新增收入记录</button><button type="button" class="load-income">载入收入数据</button><button type="button" class="delete-month">删除月份</button><p class="year-count" role="status"></p></section><section class="edit-card income-summary-editor" hidden></section><div class="editor-records"></div><p class="editor-note">切换年份会保留尚未保存的填写内容。点击“保存修改”同时保存所有年份；收入明细按查询年份显示。合计汇总当前查询条件下的记录；如有未展开明细合计，也会按其适用类型计入。</p><p class="editor-note">保存后，已有申请的预览、放大和再次下载也使用最新数据；已下载的旧图片需重新下载。</p></form><dialog class="delete-month-dialog" aria-labelledby="delete-month-title"><h2 id="delete-month-title">删除月份</h2><label>选择月份<select name="delete-month" aria-describedby="delete-month-info"></select></label><p id="delete-month-info" role="status"></p><div class="month-actions"><button type="button" class="cancel-month">取消</button><button type="button" class="confirm-month" disabled>确认删除</button></div></dialog>`,'<footer class="editor-footer"><span class="editor-result" role="status"></span><button class="flow-primary" type="submit" form="demo-editor">保存修改</button></footer>');
  const form=flowPage.querySelector('form'),records=form.querySelector('.editor-records'),result=flowPage.querySelector('.editor-result');
+ const bankRows=form.querySelector('.profile-bank-rows');
+ function addBankRow(card={name:'',lastFour:''}) {
+  const row=document.createElement('fieldset');row.className='profile-bank-row';
+  row.innerHTML='<legend>银行卡</legend><label>银行名称<input name="bank-name" required maxlength="80" autocomplete="off"></label><label>银行卡尾号<input name="bank-last-four" type="text" required inputmode="numeric" autocomplete="off" maxlength="4" pattern="[0-9]{4}" placeholder="仅填后四位"></label><button type="button" class="profile-remove-card">移除这张卡</button>';
+  row.querySelector('[name="bank-name"]').value=card.name;
+  row.querySelector('[name="bank-last-four"]').value=card.lastFour;
+  row.querySelector('button').onclick=()=>{row.remove();result.textContent='尚未保存';};
+  bankRows.append(row);return row;
+ }
+ TaxProfileDisplay.bankCards().forEach(addBankRow);
+ form.querySelector('.profile-add-card').onclick=()=>{addBankRow().querySelector('input').focus();result.textContent='尚未保存';};
  const collect=()=>{if(summaryDraft[year]){summaryDraft[year].income=form.elements['summary-income'].value.trim();summaryDraft[year].tax=form.elements['summary-tax'].value.trim();}for(const card of records.querySelectorAll('[data-record-id]')){const r=draft.find(r=>String(r.id)===card.dataset.recordId);for(const k of ['month','type','category','company','income','tax'])r[k]=card.querySelector(`[name="${k}"]`).value.trim();r.deductions=Object.fromEntries(deductionFields.map(([key])=>[key,card.querySelector(`[name="deduction-${key}"]`).value.trim()]));r.deductions=recordDeductions(r);r.taxRecord={...r.taxRecord,...Object.fromEntries(taxRecordFields.map(([key])=>[key,card.querySelector(`[name="tax-record-${key}"]`).value.trim()]))};}};
  const deleteButton=form.querySelector('.delete-month');
  const monthDialog=flowPage.querySelector('.delete-month-dialog');
@@ -164,9 +175,14 @@ function showDemoEditor(){
  form.querySelector('.add-income').onclick=()=>{collect();const id='new-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);recordYears.set(id,year);draft.push({id,month:year+'-01',type:'工资薪金',category:'正常工资薪金',company:'',income:'',tax:''});render();result.textContent='尚未保存';records.lastElementChild.scrollIntoView({block:'start',behavior:'smooth'});};
  form.onsubmit=e=>{
  e.preventDefault();collect();
- const identity=form.elements['profile-identity'].value.trim().toUpperCase(),name=form.elements['profile-name'].value.trim();
+ const enteredId=form.elements['profile-identity'].value.trim().toUpperCase(),name=form.elements['profile-name'].value.trim();
+ const identityMask=/^\d(?:\*{13}|\*{16})[0-9X]$/.test(enteredId)?enteredId:'';
+ const identity=identityMask?'':enteredId;
+ const bankCards=[...bankRows.children].map(row=>({name:row.querySelector('[name="bank-name"]').value.trim(),lastFour:row.querySelector('[name="bank-last-four"]').value.trim()}));
+ if(bankCards.some(card=>!card.name || !/^\d{4}$/.test(card.lastFour))){result.textContent='请填写每张卡的银行名称与四位尾号。';return;}
+ const employers=[...new Set(form.elements['profile-employers'].value.split(/\r?\n/).map(s=>s.trim()).filter(Boolean))];
  if(name.length>80){result.textContent='纳税人姓名请控制在80个字符以内。';return;}
- if(identity&&!/^(?:\d{15}|\d{17}[\dX])$/.test(identity)){result.textContent='演示号码需为15位数字或18位号码，最后一位可为X。';return;}
+ if(identity&&!/^(?:\d{15}|\d{17}[\dX])$/.test(identity)){result.textContent='演示号码应为 15 或 18 位；可只填首尾，其余位用星号。';return;}
  const invalid=draft.find(r=>!validDemoRecord(r)||!r.month.startsWith(recordYears.get(r.id)+'-')||!r.company||!r.category||['income','tax'].some(k=>!Number.isSafeInteger(cents(r[k])))||deductionFields.some(([key])=>{const v=r.deductions[key];return v!==''&&(!/^\d+(\.\d{1,2})?$/.test(v)||!Number.isSafeInteger(cents(v)));}));
  if(invalid){result.textContent=`请检查${invalid.month}的单位、小类、收入和扣除金额，金额最多两位小数。`;return;}
  const invalidTaxRecord=draft.find(r=>!validTaxRecordData(r));
@@ -175,7 +191,7 @@ function showDemoEditor(){
  let nextRecords;
  try{
   nextRecords=structuredClone(draft);
-  persistDemoEditorData(nextRecords,{...taxpayerProfileData(),name,identity,taxDocumentEdited:true,incomeSummaryRemainders:summaryDraft});
+  persistDemoEditorData(nextRecords,{...taxpayerProfileData(),name,identity,identityMask,bankCards,employers,taxDocumentEdited:true,incomeSummaryRemainders:summaryDraft});
  }catch(error){result.textContent=error.storageRestored===false?'保存未完成，旧数据恢复也未完成。请保留当前页面并重试保存。':'保存未完成：原数据未改动，请重试。';return;}
  demoRecords=nextRecords;profileIdentity=identity;profileIdentityVisible=false;
  refreshDemoIncome();renderProfileIdentity();

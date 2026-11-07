@@ -24,3 +24,9 @@
 .delete-month-dialog .month-actions{display:flex;gap:10px}
 .month-actions button{flex:1;min-height:44px;border-radius:7px;font:inherit}
 .cancel-month{background:#edf2f7;color:#33475d}.confirm-month{background:#a6312b;color:white}
+
+.profile-employers{display:block;width:100%;box-sizing:border-box;margin-top:5rem;padding:9rem 10rem;font:inherit;font-size:15rem;line-height:1.45;color:#232e3c;background:#f6f8fb;border:1px solid #e0e6ed;border-radius:5rem;resize:vertical}
+.profile-bank-row{min-width:0;margin:8rem 0 12rem;padding:8rem 12rem 12rem;border:1px solid #e0e6ed;border-radius:6rem}
+.profile-bank-row legend{padding:0 5rem;font-size:14rem;color:#526375}
+.profile-add-card,.profile-remove-card{min-height:44px;padding:6rem 10rem;border-radius:5rem;font-size:14rem}
+.profile-add-card{color:#2475c7;background:#eef3f9}.profile-remove-card{margin-top:8rem;color:#a6312b;background:white}

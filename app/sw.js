@@ -1,9 +1,10 @@
 'use strict';
-const VERSION = 'v38-delete-month-20261107';
+const VERSION = 'v39-profile-pages-20261107';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
 const FILES = [
+  "profile-display.js", "bank-card.css", "employment-page.css", "assets/profile-ui/cmb-mark.svg",
   "assets/home-ui/article-filing.png",
   "assets/home-ui/article-password.png",
   "assets/home-ui/article-refund.png",

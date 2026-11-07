@@ -11,7 +11,7 @@
  top:calc(135.666667rem + var(--safe-top));height:100rem;
  background:linear-gradient(90deg,#fde6d0,#f5d5b7 50%,#edc69b);
 }
-.phone .profile-name{top:calc(158rem + var(--safe-top));font-size:14rem;line-height:21rem;font-weight:600;color:#1e1e20}
+.phone .profile-name{max-width:235rem;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;top:calc(158rem + var(--safe-top));font-size:14rem;line-height:21rem;font-weight:600;color:#1e1e20}
 .phone .profile .personal-hit{
  top:calc(157rem + var(--safe-top));width:81.333333rem;height:24rem;
  font-size:12rem;line-height:18rem;gap:5rem;
