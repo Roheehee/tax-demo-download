@@ -12,7 +12,7 @@
 .income-detail-flow .flow-body section:first-child{margin-top:0}
 .income-detail-flow .flow-heading,.tax-calculation-flow .flow-heading{margin-bottom:9rem}
 .income-detail-flow .flow-note{font-size:13rem;line-height:20rem;padding:11rem 17rem}
-.income-detail-flow .flow-link{font-size:16rem;padding:8rem 17rem;color:#598fbd}
+.income-detail-flow .flow-link{font-size:16rem;padding:8rem 17rem;color:var(--income-accent)}
 .income-detail-flow .flow-note .flow-link{padding:0;font-size:13rem}
 .link-chevron{display:inline-block;width:10rem;height:10rem;border-top:1.5rem solid currentColor;border-right:1.5rem solid currentColor;transform:rotate(45deg)}
 .special-deductions summary{display:flex;justify-content:space-between;align-items:center;padding:18rem 17rem;list-style:none;cursor:pointer;font-size:16rem;line-height:23rem;gap:12rem}

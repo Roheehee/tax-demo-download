@@ -1,4 +1,5 @@
 /* Native iPhone text metrics; rem is the existing 402-point design unit. */
+:root { --income-accent: #4286f5; }
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font-family:inherit;letter-spacing:normal}
@@ -13,7 +14,6 @@ button,input,select,textarea{font-family:inherit;letter-spacing:normal}
 .flow-note{font-weight:400;letter-spacing:0}
 /* Income query on a 402-point viewport. The device supplies the top inset. */
 .income-query-flow {
-  --query-accent: #4286f5;
   color: #333;
   background: #f4f5f9;
 }
@@ -39,7 +39,7 @@ button,input,select,textarea{font-family:inherit;letter-spacing:normal}
   height: 17rem;
   margin: 0;
   border-radius: 2rem;
-  background: var(--query-accent);
+  background: var(--income-accent);
 }
 .income-query-flow .query-year {
   height: 48rem;
@@ -103,7 +103,7 @@ button,input,select,textarea{font-family:inherit;letter-spacing:normal}
   border: 0;
   font-size: 16rem;
   line-height: 23rem;
-  color: #4184cf;
+  color: var(--income-accent);
 }
 .income-query-flow .double-chevron {
   width: 16rem;
@@ -121,7 +121,7 @@ button,input,select,textarea{font-family:inherit;letter-spacing:normal}
   width: calc(100% - 40rem);
   height: 48.6667rem;
   border-radius: 4rem;
-  background: var(--query-accent);
+  background: var(--income-accent);
   color: #fff;
   font-size: 17rem;
   line-height: 24rem;

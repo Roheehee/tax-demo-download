@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v43-income-query-20261107';
+const VERSION = 'v44-income-colors-20261107';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
