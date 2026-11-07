@@ -12,3 +12,15 @@
 .editor-tax-record input:focus-visible,.editor-tax-record textarea:focus-visible{outline:2rem solid #94bff0;outline-offset:2rem}
 
 .editor-toolbar .load-income{background:#eef3f9;color:#2475c7;width:100%;padding:12rem;margin-top:10rem;border-radius:7rem;font-size:15rem}.income-summary-editor[hidden]{display:none}.income-summary-editor .editor-note{margin:8rem 0;padding:0}
+
+.editor-toolbar .delete-month{width:100%;min-height:44rem;margin-top:10rem;background:#fff5f4;color:#a6312b;border:1rem solid #e9cbc9;border-radius:7rem;font-size:15rem}
+.editor-toolbar .delete-month:disabled,.confirm-month:disabled{opacity:.45}
+.delete-month-dialog{box-sizing:border-box;width:min(370px,calc(100vw - 32px));max-height:85dvh;margin:auto;padding:20px;border:0;border-radius:14px;background:white;color:#263440;font:15px/1.5 -apple-system,BlinkMacSystemFont,sans-serif}
+.delete-month-dialog::backdrop{background:#0007}
+.delete-month-dialog h2{margin:0 0 12px;font-size:18px}
+.delete-month-dialog label,.delete-month-dialog select{display:block;width:100%}
+.delete-month-dialog select{box-sizing:border-box;margin-top:5px;min-height:44px;padding:0 10px;font:inherit;color:inherit;background:#f6f8fb;border:1px solid #ced9e4;border-radius:6px}
+.delete-month-dialog p{margin:12px 0;color:#536271}
+.delete-month-dialog .month-actions{display:flex;gap:10px}
+.month-actions button{flex:1;min-height:44px;border-radius:7px;font:inherit}
+.cancel-month{background:#edf2f7;color:#33475d}.confirm-month{background:#a6312b;color:white}

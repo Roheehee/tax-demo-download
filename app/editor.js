@@ -108,14 +108,47 @@ function showDemoEditor(){
  const summaryDraft=window.TaxIncomePreset?TaxIncomePreset.normalizeRemainders(profile):{};
  const recordYears=new Map(draft.map(r=>[r.id,r.month.slice(0,4)]));
  const years=[...new Set(['2026','2025',year,...Object.keys(summaryDraft),...draft.map(r=>r.month.slice(0,4))])].sort().reverse();
- showFlow('修改演示数据',`<p class="editor-note">比赛演示数据 · 默认载入已选收入数据 · 修改仅保存到当前设备<br>按年度编辑，可为同一月份添加多条记录。</p><form id="demo-editor"><section class="edit-card"><h2>我的 · 纳税人信息</h2><label>纳税人姓名<input name="profile-name" type="text" autocomplete="off" maxlength="80" placeholder="填写演示姓名" value="${htmlEscape(profile.name)}"></label><label>演示号码<input name="profile-identity" type="text" autocomplete="off" maxlength="18" placeholder="填写15位或18位演示号码" value="${htmlEscape(profileIdentity)}"></label></section><section class="edit-card editor-toolbar"><label>编辑年度<select name="editor-year">${years.map(y=>`<option ${y===year?'selected':''}>${y}</option>`).join('')}</select></label><button type="button" class="add-income">＋ 新增收入记录</button><button type="button" class="load-income">载入收入数据</button><p class="year-count" role="status"></p></section><section class="edit-card income-summary-editor" hidden></section><div class="editor-records"></div><p class="editor-note">切换年份会保留尚未保存的填写内容。点击“保存修改”同时保存所有年份；收入明细按查询年份显示。合计汇总当前查询条件下的记录；如有未展开明细合计，也会按其适用类型计入。</p><p class="editor-note">保存后，已有申请的预览、放大和再次下载也使用最新数据；已下载的旧图片需重新下载。</p></form>`,'<footer class="editor-footer"><span class="editor-result" role="status"></span><button class="flow-primary" type="submit" form="demo-editor">保存修改</button></footer>');
+ showFlow('修改演示数据',`<p class="editor-note">比赛演示数据 · 默认载入已选收入数据 · 修改仅保存到当前设备<br>按年度编辑，可为同一月份添加多条记录。</p><form id="demo-editor"><section class="edit-card"><h2>我的 · 纳税人信息</h2><label>纳税人姓名<input name="profile-name" type="text" autocomplete="off" maxlength="80" placeholder="填写演示姓名" value="${htmlEscape(profile.name)}"></label><label>演示号码<input name="profile-identity" type="text" autocomplete="off" maxlength="18" placeholder="填写15位或18位演示号码" value="${htmlEscape(profileIdentity)}"></label></section><section class="edit-card editor-toolbar"><label>编辑年度<select name="editor-year">${years.map(y=>`<option ${y===year?'selected':''}>${y}</option>`).join('')}</select></label><button type="button" class="add-income">＋ 新增收入记录</button><button type="button" class="load-income">载入收入数据</button><button type="button" class="delete-month">删除月份</button><p class="year-count" role="status"></p></section><section class="edit-card income-summary-editor" hidden></section><div class="editor-records"></div><p class="editor-note">切换年份会保留尚未保存的填写内容。点击“保存修改”同时保存所有年份；收入明细按查询年份显示。合计汇总当前查询条件下的记录；如有未展开明细合计，也会按其适用类型计入。</p><p class="editor-note">保存后，已有申请的预览、放大和再次下载也使用最新数据；已下载的旧图片需重新下载。</p></form><dialog class="delete-month-dialog" aria-labelledby="delete-month-title"><h2 id="delete-month-title">删除月份</h2><label>选择月份<select name="delete-month" aria-describedby="delete-month-info"></select></label><p id="delete-month-info" role="status"></p><div class="month-actions"><button type="button" class="cancel-month">取消</button><button type="button" class="confirm-month" disabled>确认删除</button></div></dialog>`,'<footer class="editor-footer"><span class="editor-result" role="status"></span><button class="flow-primary" type="submit" form="demo-editor">保存修改</button></footer>');
  const form=flowPage.querySelector('form'),records=form.querySelector('.editor-records'),result=flowPage.querySelector('.editor-result');
  const collect=()=>{if(summaryDraft[year]){summaryDraft[year].income=form.elements['summary-income'].value.trim();summaryDraft[year].tax=form.elements['summary-tax'].value.trim();}for(const card of records.querySelectorAll('[data-record-id]')){const r=draft.find(r=>String(r.id)===card.dataset.recordId);for(const k of ['month','type','category','company','income','tax'])r[k]=card.querySelector(`[name="${k}"]`).value.trim();r.deductions=Object.fromEntries(deductionFields.map(([key])=>[key,card.querySelector(`[name="deduction-${key}"]`).value.trim()]));r.deductions=recordDeductions(r);r.taxRecord={...r.taxRecord,...Object.fromEntries(taxRecordFields.map(([key])=>[key,card.querySelector(`[name="tax-record-${key}"]`).value.trim()]))};}};
+ const deleteButton=form.querySelector('.delete-month');
+ const monthDialog=flowPage.querySelector('.delete-month-dialog');
+ const monthSelect=monthDialog.querySelector('select'), monthInfo=monthDialog.querySelector('[role="status"]');
+ const confirmMonth=monthDialog.querySelector('.confirm-month');
+ function matchesMonth(row, month){return recordYears.get(row.id)===year && row.month===month;}
+ function showMonthInfo(){
+  const month=monthSelect.value, count=month ? draft.filter(r=>matchesMonth(r,month)).length : 0;
+  confirmMonth.disabled=!count;
+  monthInfo.textContent=count ? `${month} 共有 ${count} 条收入记录，将一起移除。点击“保存修改”后生效。` : '请选择要删除的月份。';
+ }
+ deleteButton.onclick=()=>{
+  collect();
+  const months=[...new Set(draft.filter(r=>recordYears.get(r.id)===year && r.month.startsWith(year+'-') && /^\d{4}-(0[1-9]|1[0-2])$/.test(r.month)).map(r=>r.month))].sort().reverse();
+  monthSelect.replaceChildren(new Option('请选择月份',''));
+  for(const month of months)monthSelect.add(new Option(month,month));
+  showMonthInfo();
+  if(!months.length)monthInfo.textContent='本年度没有可删除的月份。';
+  monthDialog.showModal();
+ };
+ monthSelect.onchange=showMonthInfo;
+ monthDialog.querySelector('.cancel-month').onclick=()=>monthDialog.close();
+ confirmMonth.onclick=()=>{
+  const month=monthSelect.value;
+  if(!month || !month.startsWith(year+'-'))return;
+  const removed=draft.filter(r=>matchesMonth(r,month));
+  if(!removed.length)return;
+  draft=draft.filter(r=>!matchesMonth(r,month));
+  for(const row of removed)recordYears.delete(row.id);
+  monthDialog.close();
+  render();
+  result.textContent=`已移除 ${month} 的 ${removed.length} 条记录，尚未保存`;
+ };
  function render(){
  const summaryCard=form.querySelector('.income-summary-editor'),summary=summaryDraft[year];
  summaryCard.hidden=!summary;
  summaryCard.innerHTML=summary?`<h2>截图未展开明细合计 · ${htmlEscape(year)}</h2><p class="editor-note">这里只填写未列在逐月明细里的金额；已全部列出时填 0。如果下方补录了原先计入这里的明细，请扣减对应余额。</p><p class="editor-note">适用所得类型：${summary.types.map(htmlEscape).join('、')}。筛选不含全部这些类型时，仅汇总已录入明细。</p><label>未展开明细的收入合计（元）<input name="summary-income" type="number" required min="0" step="0.01" inputmode="decimal" value="${htmlEscape(summary.income)}"></label><label>未展开明细的税额合计（元）<input name="summary-tax" type="number" required min="0" step="0.01" inputmode="decimal" value="${htmlEscape(summary.tax)}"></label>`:'';
  const visible=draft.filter(r=>recordYears.get(r.id)===year);
+ deleteButton.disabled=visible.length===0;
  form.querySelector('.year-count').textContent=`${year}年 · ${visible.length}条记录`;
  records.innerHTML=visible.map((r,i)=>`<section class="edit-card" data-record-id="${htmlEscape(r.id)}"><h2>${i+1}. ${htmlEscape(r.type)} · ${htmlEscape(r.month)}</h2><label>月份<input required name="month" type="month" min="${year}-01" max="${year}-12" value="${htmlEscape(r.month)}"></label><label>所得类型<select name="type">${[...new Set([...demoTypes,r.type])].map(t=>`<option ${r.type===t?'selected':''}>${htmlEscape(t)}</option>`).join('')}</select></label><label>所得项目小类<input required name="category" value="${htmlEscape(r.category)}"></label><label>扣缴义务人<input required name="company" value="${htmlEscape(r.company)}"></label><label>收入（元）<input name="income" type="number" min="0" step="0.01" inputmode="decimal" placeholder="未提供" value="${htmlEscape(r.income)}"></label><label>已申报税额（元）<input name="tax" type="number" min="0" step="0.01" inputmode="decimal" placeholder="未提供" value="${htmlEscape(r.tax)}"></label>${deductionEditor(r)}${taxRecordEditor(r)}${String(r.id).startsWith('new-')&&!demoRecords.some(saved=>saved.id===r.id)?'<button type="button" class="cancel-new">取消此条新增</button>':''}</section>`).join('')||'<p class="editor-note">本年度暂无记录，点击“新增收入记录”开始填写。</p>';
  records.querySelectorAll('.editor-deductions').forEach(section=>section.addEventListener('input',()=>{
