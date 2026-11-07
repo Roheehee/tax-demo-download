@@ -1,0 +1,93 @@
+/* The web viewport starts below the system bar. These are the existing
+   tab controls, with the same 47 CSS pixel row as the income document. */
+.web-shell .phone > .header,
+.web-shell .phone > .scroll {
+  --content-top: 0px;
+  --app-bar: var(--shell-header-height);
+  --app-bar-pad: 0px;
+}
+
+.web-shell .phone > .header {
+  background-color: #207cf5;
+  background-image:
+    radial-gradient(ellipse 200rem 140rem at 50% -10rem, #7d9bf2, transparent),
+    radial-gradient(ellipse 205rem 270rem at 50% 135rem, #4ba1f3 25%, transparent),
+    linear-gradient(#207cf5, #3587f9 182rem);
+}
+
+.web-shell .phone > .header.solid {
+  background: #247be1;
+}
+
+.web-shell .phone > .tab-page:not(.profile) > .tab-top {
+  padding-top: 0;
+}
+
+.web-shell .phone > .tab-page .tab-heading {
+  height: var(--shell-header-height);
+  padding-top: 0;
+}
+
+/* The profile starts with a portrait instead of a title. Keep the artwork
+   and its live controls in their existing 402-point coordinate system. */
+.web-shell .phone > .profile {
+  --safe-top: 0px;
+  --profile-hero-height: 226.666667rem;
+}
+
+.web-shell .phone > .profile > .tab-top {
+  height: var(--profile-hero-height);
+}
+
+@media (display-mode: standalone), (display-mode: fullscreen) {
+  .web-shell .phone {
+    --tab-gutter: max(0px, calc((100vw - 402rem) / 2));
+  }
+
+  .web-shell .phone > .header,
+  .web-shell .phone > .tab-page .tab-heading,
+  .web-shell .phone > .profile > .tab-top {
+    position: fixed;
+    inset: 0 0 auto;
+    width: 100%;
+  }
+
+  .web-shell .phone > .header .search-row {
+    max-width: 402rem;
+    margin-inline: auto;
+  }
+
+  /* Keep the notices, filters and scrolling pane directly below the bar
+     when its title is taken out of normal flow. */
+  .web-shell .phone > .tab-page:not(.profile) > .tab-top {
+    padding-top: var(--shell-header-height);
+  }
+
+  .web-shell .phone > .tab-page .tab-heading {
+    z-index: 1;
+    padding-inline: calc(var(--tab-gutter) + 13rem);
+    background-color: #337cf1;
+    background-image: inherit;
+  }
+
+  .web-shell .phone > .profile {
+    padding-top: var(--profile-hero-height);
+  }
+
+  .web-shell .phone > .profile > .tab-top {
+    background-position: center top, left var(--tab-gutter) bottom, right var(--tab-gutter) bottom;
+  }
+
+  .web-shell .profile .profile-info-surface {
+    inset-inline: calc(var(--tab-gutter) + 23rem);
+  }
+
+  .web-shell .profile .profile-name,
+  .web-shell .profile .profile-identity {
+    left: calc(var(--tab-gutter) + 49rem);
+  }
+
+  .web-shell .phone > .profile .personal-hit {
+    right: calc(var(--tab-gutter) + 23rem);
+  }
+}

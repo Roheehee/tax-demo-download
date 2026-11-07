@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v35-income-page-20261107';
+const VERSION = 'v36-shell-headers-20261107';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
@@ -29,6 +29,8 @@ const FILES = [
   "assets/profile-ui/support.png",
   "assets/profile-ui/about.png",
   "app-shell.css",
+  "tab-headers.css",
+  "flow-header.css",
   "assets/bank-reference.svg",
   "assets/home-scroll.jpg",
   "assets/home-top.jpg",

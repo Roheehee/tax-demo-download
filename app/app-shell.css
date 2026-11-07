@@ -77,3 +77,10 @@
  bottom:max(22rem,calc(var(--safe-bottom) - 12rem));
  padding-left:22.333333rem;padding-right:22.333333rem;
 }
+
+/* With viewport-fit=auto the web viewport already starts below the iOS status
+   bar. Size the scroll containers to the visible viewport, including in a Web Clip. */
+.web-shell .phone {
+  height: 100dvh;
+  --shell-header-height: 47px;
+}
