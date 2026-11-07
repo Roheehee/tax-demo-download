@@ -165,14 +165,17 @@ function showIncomeQuery(){
  flowPage.querySelectorAll('input').forEach(c=>c.onchange=()=>submit.disabled=!flowPage.querySelector('input:checked'));
  submit.disabled=!flowPage.querySelector('input:checked');
  submit.onclick=()=>{
+ const startedAt=Date.now();
+ if(window.TaxIncomeLoading && !window.TaxIncomeLoading.show(startedAt)) return;
  incomeQueryYear=flowPage.querySelector('select').value;incomeQueryTypes=[...flowPage.querySelectorAll('input:checked')].map(c=>c.value);
  if(window.TaxIncomeNavigation){
-  TaxIncomeNavigation.fromQuery({year:incomeQueryYear,types:incomeQueryTypes,tab:currentTab,expanded:more.getAttribute('aria-expanded')==='true',scroll:flowPage.querySelector('.flow-body').scrollTop});
+  TaxIncomeNavigation.fromQuery({year:incomeQueryYear,types:incomeQueryTypes,tab:currentTab,expanded:more.getAttribute('aria-expanded')==='true',scroll:flowPage.querySelector('.flow-body').scrollTop},startedAt);
   return;
  }
  refreshDemoIncome();
  const view=captureFlowView(),returnUrl=location.pathname+location.hash;closeFlow();showIncome();
  incomePage.querySelector('.income-back').onclick=()=>{history.replaceState({tab:currentTab},'',returnUrl);setIncomeVisible(false);restoreFlowView(view);};
+ window.TaxIncomeLoading?.finish();
  };
 }
 function showJulyDetail(){showFlow('收入纳税明细详情',`<section><h2 class="flow-heading">纳税明细信息</h2>${flowRow('收入：','8000.00元')}${flowRow('已申报税额：','80.00元')}<button class="flow-link" data-title="查看税款计算">查看税款计算 ❯</button></section><section><h2 class="flow-heading">纳税明细-基础情况</h2>${[['所得项目小类：','正常工资薪金'],['扣缴义务人名称：','示例科技有限公司'],['扣缴义务人纳税人识别号：','DEMO（演示）'],['主管税务机关：','示例税务机关'],['申报渠道：','其他'],['申报日期：','2026-08-01'],['税款所属期：','2026-07']].map(r=>flowRow(...r)).join('')}</section><div class="flow-note">温馨提示：专项附加扣除和个人养老金已体现在税款计算过程中，在本期数据中不予显示，您可在“税款计算-累计收入与扣除详情”中查看。<button class="flow-link" data-title="查看税款计算">查看税款计算</button></div><section><h2 class="flow-heading">本期收入与扣除详情</h2>${[['本期收入：','8000.00元'],['本期免税收入：','0.00元'],['本期减除费用：','3000.00元'],['本期专项扣除：','500.00元']].map(r=>flowRow(...r)).join('')}</section>`)}

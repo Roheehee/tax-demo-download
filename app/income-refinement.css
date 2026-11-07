@@ -96,3 +96,41 @@
 .year-selection-window{position:absolute;left:0;right:0;top:138rem;height:var(--year-row);border-top:1rem solid #e9e9e9;border-bottom:1rem solid #e9e9e9;pointer-events:none}
 @keyframes year-picker-in{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.year-picker-panel{animation:none}}
+
+/* Query feedback spans the form and the results without intercepting touches. */
+.income-loading-hud {
+  position: fixed;
+  z-index: 1000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 133px;
+  height: 111px;
+  border-radius: 4px;
+  background: rgb(70 77 85 / 82%);
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.income-loading-wheel {
+  position: relative;
+  width: 27px;
+  height: 27px;
+  animation: income-loading-turn 1.2s steps(12, end) infinite;
+}
+.income-loading-wheel > i {
+  position: absolute;
+  top: 0;
+  left: 12.25px;
+  width: 2.5px;
+  height: 7px;
+  border-radius: 2px;
+  background: #fff;
+  transform-origin: 50% 13.5px;
+}
+@keyframes income-loading-turn {
+  to { transform: rotate(1turn); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .income-loading-wheel { animation: none; }
+}

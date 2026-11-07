@@ -1,3 +1,59 @@
+// A query crosses documents. Keep a single visual timeline while the result renders.
+(() => {
+  const feedbackMs = 267;
+  const revolutionMs = 1200;
+  let hud;
+  let started;
+  let timer;
+
+  function clear() {
+    clearTimeout(timer);
+    hud?.remove();
+    hud = null;
+  }
+
+  function show(startedAt) {
+    if (hud) return false;
+    started = startedAt;
+    hud = document.createElement('div');
+    hud.className = 'income-loading-hud';
+    hud.setAttribute('role', 'status');
+    hud.setAttribute('aria-label', '正在查询');
+    // On a portrait iPhone the installed app starts below the native status bar.
+    if (navigator.standalone && screen.width === innerWidth && matchMedia('(orientation: portrait)').matches) {
+      const inset = Math.max(0, screen.height - innerHeight);
+      hud.style.top = 'calc(50% - ' + inset / 2 + 'px)';
+    }
+    const wheel = document.createElement('span');
+    wheel.className = 'income-loading-wheel';
+    wheel.setAttribute('aria-hidden', 'true');
+    wheel.style.animationDelay = '-' + ((Date.now() - started) % revolutionMs) + 'ms';
+    for (let i = 0; i < 12; i++) {
+      const spoke = document.createElement('i');
+      spoke.style.transform = 'rotate(' + i * 30 + 'deg)';
+      spoke.style.opacity = String(0.25 + 0.75 * i / 11);
+      wheel.append(spoke);
+    }
+    hud.append(wheel);
+    document.body.append(hud);
+    // Release the query button if navigation was cancelled by the browser.
+    timer = setTimeout(clear, 12000);
+    return true;
+  }
+
+  function finish() {
+    if (!hud) return;
+    clearTimeout(timer);
+    const remaining = feedbackMs - (Date.now() - started);
+    if (remaining > 0) timer = setTimeout(clear, remaining);
+    else clear();
+  }
+
+  window.TaxIncomeLoading = Object.freeze({ show, finish, clear });
+  window.addEventListener('pagehide', clear);
+  window.addEventListener('popstate', clear);
+})();
+
 // Only this income list uses a separate, normally scrolling document.
 (() => {
   const directory = new URL('./', location.href);
@@ -17,8 +73,8 @@
   const putState = patch => history.replaceState({ ...history.state, ...patch }, '');
   const pathKey = url => url.pathname.replace(/\/index(?:\.html)?$/, '/').replace(/\/income-view\.html$/, '/income-view');
   const targetKey = url => pathKey(url) + url.search + url.hash;
-  function visit(url, from) {
-    try { sessionStorage.setItem(ticketKey, JSON.stringify({ from, to: targetKey(url), at: Date.now() })); } catch {}
+  function visit(url, from, queryStartedAt) {
+    try { sessionStorage.setItem(ticketKey, JSON.stringify({ from, to: targetKey(url), at: Date.now(), queryStartedAt })); } catch {}
     location.assign(url.href);
   }
   function acceptArrival() {
@@ -28,6 +84,9 @@
       sessionStorage.removeItem(ticketKey);
       if (ticket.to === targetKey(new URL(location.href)) && Date.now() - ticket.at < 120000) {
         putState({ taxIncomeFrom: ticket.from });
+        if (isList && Number.isFinite(ticket.queryStartedAt)) {
+          window.TaxIncomeLoading.show(ticket.queryStartedAt);
+        }
       }
     } catch {}
   }
@@ -42,12 +101,12 @@
     } catch { return false; }
   }
   function openResults() { visit(listURL(), 'shell'); }
-  function fromQuery(query) {
+  function fromQuery(query, startedAt) {
     putState({ taxIncomeQuery: query });
     const url = listURL();
     url.searchParams.set('year', query.year);
     for (const type of query.types) url.searchParams.append('type', type);
-    visit(url, 'shell');
+    visit(url, 'shell', startedAt);
   }
   function forgetQuery() {
     if (!history.state?.taxIncomeQuery) return;

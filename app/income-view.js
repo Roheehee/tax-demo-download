@@ -66,6 +66,7 @@
       displayRoute(false, state);
       return;
     }
+    window.TaxIncomeLoading?.clear();
     if (fromList) {
       saveState({ taxIncomeScroll: window.scrollY, incomeRow: String(id) });
     } else {
@@ -202,6 +203,7 @@
     notice('收入合计说明', message);
   };
   displayRoute(false);
+  window.TaxIncomeLoading?.finish();
   window.addEventListener('pageshow', event => {
     if (event.persisted) displayRoute(false);
   });
