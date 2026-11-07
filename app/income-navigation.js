@@ -1,20 +1,19 @@
 // A query crosses documents. Keep a single visual timeline while the result renders.
 (() => {
-  const feedbackMs = 267;
+  const showAfterMs = 150;
   const revolutionMs = 1200;
   let hud;
-  let started;
-  let timer;
+  let pendingSince = null;
+  let revealTimer;
 
   function clear() {
-    clearTimeout(timer);
+    clearTimeout(revealTimer);
+    pendingSince = null;
     hud?.remove();
     hud = null;
   }
 
-  function show(startedAt) {
-    if (hud) return false;
-    started = startedAt;
+  function reveal() {
     hud = document.createElement('div');
     hud.className = 'income-loading-hud';
     hud.setAttribute('role', 'status');
@@ -27,7 +26,7 @@
     const wheel = document.createElement('span');
     wheel.className = 'income-loading-wheel';
     wheel.setAttribute('aria-hidden', 'true');
-    wheel.style.animationDelay = '-' + ((Date.now() - started) % revolutionMs) + 'ms';
+    wheel.style.animationDelay = '-' + ((Date.now() - pendingSince) % revolutionMs) + 'ms';
     for (let i = 0; i < 12; i++) {
       const spoke = document.createElement('i');
       spoke.style.transform = 'rotate(' + i * 30 + 'deg)';
@@ -36,20 +35,20 @@
     }
     hud.append(wheel);
     document.body.append(hud);
-    // Release the query button if navigation was cancelled by the browser.
-    timer = setTimeout(clear, 12000);
+  }
+
+  function show(startedAt) {
+    // Suppress double taps, but permit an explicit retry if the browser silently stopped loading.
+    if (pendingSince !== null && startedAt - pendingSince < 12000) return false;
+    clear();
+    pendingSince = startedAt;
+    // The destination uses the original click time, including time spent navigating.
+    const remaining = Math.max(0, showAfterMs - (Date.now() - startedAt));
+    revealTimer = setTimeout(reveal, remaining);
     return true;
   }
 
-  function finish() {
-    if (!hud) return;
-    clearTimeout(timer);
-    const remaining = feedbackMs - (Date.now() - started);
-    if (remaining > 0) timer = setTimeout(clear, remaining);
-    else clear();
-  }
-
-  window.TaxIncomeLoading = Object.freeze({ show, finish, clear });
+  window.TaxIncomeLoading = Object.freeze({ show, finish: clear, clear });
   window.addEventListener('pagehide', clear);
   window.addEventListener('popstate', clear);
 })();
@@ -74,7 +73,20 @@
   const pathKey = url => url.pathname.replace(/\/index(?:\.html)?$/, '/').replace(/\/income-view\.html$/, '/income-view');
   const targetKey = url => pathKey(url) + url.search + url.hash;
   function visit(url, from, queryStartedAt) {
-    try { sessionStorage.setItem(ticketKey, JSON.stringify({ from, to: targetKey(url), at: Date.now(), queryStartedAt })); } catch {}
+    const ticket = JSON.stringify({ from, to: targetKey(url), at: Date.now(), queryStartedAt });
+    try { sessionStorage.setItem(ticketKey, ticket); } catch {}
+    if (queryStartedAt) {
+      window.navigation?.addEventListener('navigate', event => {
+        if (event.destination.url === url.href) {
+          event.signal.addEventListener('abort', () => {
+            window.TaxIncomeLoading.clear();
+            try {
+              if (sessionStorage.getItem(ticketKey) === ticket) sessionStorage.removeItem(ticketKey);
+            } catch {}
+          }, { once: true });
+        }
+      }, { once: true });
+    }
     location.assign(url.href);
   }
   function acceptArrival() {
@@ -109,6 +121,7 @@
     visit(url, 'shell', startedAt);
   }
   function forgetQuery() {
+    window.TaxIncomeLoading.clear();
     if (!history.state?.taxIncomeQuery) return;
     const state = { ...history.state };
     delete state.taxIncomeQuery;
@@ -152,6 +165,8 @@
   }
   window.TaxIncomeNavigation = Object.freeze({ openResults, fromQuery, forgetQuery, backFromResults });
   acceptArrival();
+  // The result scripts render synchronously before load. Also clear on a failed script load.
+  if (isList) window.addEventListener('load', window.TaxIncomeLoading.clear, { once: true });
   if (!isList) {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', restoreShell, { once: true });
     else restoreShell();
