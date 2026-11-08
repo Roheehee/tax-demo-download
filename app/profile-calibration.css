@@ -36,8 +36,7 @@
 .profile .profile-card:nth-child(2) .sprite-icon{background-image:url(assets/profile-ui/employment.png)!important}
 .profile .profile-card:nth-child(3) .sprite-icon{background-image:url(assets/profile-ui/bank.png)!important}
 .profile .profile-card h3{font-size:14rem;line-height:20rem;font-weight:600;margin:6.666667rem 0 9rem}
-.profile .profile-chip{height:19rem;line-height:17rem;font-size:12rem;padding:0 9rem;border:1rem solid #3d80cb;border-radius:11rem;background:#fff;color:#417fc6}
-.profile .profile-card:first-child .profile-chip{border-color:#3d80cb;color:#417fc6}
+.profile .profile-card .profile-chip{height:19rem;line-height:17rem;font-size:12rem;padding:0 9rem;border:1rem solid currentColor;border-radius:11rem;background:#fff;color:var(--income-accent)}
 .profile .profile-card:last-child .profile-chip{background:linear-gradient(135deg,#319bff,#4675f8);border-color:#4189df;color:#fff}
 .profile .profile-menu{margin-top:13rem;padding:9.333333rem 19rem 8.333333rem 17rem;border-radius:10rem}
 .profile .profile-menu button{height:46rem;padding:0;gap:11rem;font-size:14rem;line-height:23rem;font-weight:500;color:#1e1e20}
@@ -51,7 +50,7 @@
 .profile .profile-menu button:nth-child(4) .menu-icon{background-image:url(assets/profile-ui/support.png)!important}
 .profile .profile-menu button:nth-child(5) .menu-icon{background-image:url(assets/profile-ui/about.png)!important}
 .profile .profile-menu .chevron{flex:none;width:10rem;height:15rem;border:0;margin-right:-2rem;transform:translateY(-2.833333rem);background:url(assets/profile-ui/arrow.png) center/10rem 15rem no-repeat}
-.profile .logout{height:54rem;margin-top:13rem;font-size:15rem;font-weight:500;line-height:24rem;color:#3d7cd7}
+.profile .logout{height:54rem;margin-top:13rem;font-size:15rem;font-weight:500;line-height:24rem;color:var(--income-accent)}
 /* Keep the other tabs' navigation unchanged; match this supplied profile view. */
 .phone[data-active-tab="profile"]>.nav{height:64.333333rem;bottom:calc(21.333333rem + var(--safe-bottom));padding:8rem 22.2rem 7rem;background:#fdfdfe;box-shadow:0 4rem 15rem #6670781a}
 .phone[data-active-tab="profile"]>.nav button{padding-top:3.333333rem;font-size:11rem;line-height:14rem;gap:4rem;color:#303031}

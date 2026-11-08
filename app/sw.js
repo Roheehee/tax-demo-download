@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v51-installed-headers-20261109';
+const VERSION = 'v52-profile-colors-20261109';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
@@ -24,7 +24,7 @@ const FILES = [
 
   "income-import-ui.js",
   "income-import.css",
-  "profile-calibration.css",
+  "profile-calibration.css?v=52",
   "assets/profile-ui/arrow.png",
   "assets/profile-ui/hero-top.png",
   "assets/profile-ui/hero.png",
