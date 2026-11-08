@@ -105,15 +105,3 @@
   color: var(--income-nav-color, #5485d8);
 }
 .web-shell .flow-page > .income-bar > span:empty { display: none; }
-
-@media (display-mode: standalone), (display-mode: fullscreen) {
-  .web-shell .phone > .flow-page {
-    padding-top: var(--app-bar);
-  }
-
-  .web-shell .flow-page > .income-bar {
-    position: fixed;
-    inset: 0 0 auto;
-    padding-inline: max(16rem, calc((100% - 402px) / 2 + 16rem));
-  }
-}

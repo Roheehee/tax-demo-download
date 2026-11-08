@@ -26,13 +26,6 @@ button{border:0;background:none;color:inherit;font:inherit;cursor:pointer}
 .document-back{justify-self:start;gap:4px;text-decoration:none;color:var(--income-accent)}
 .document-back svg{width:10px;height:19px;stroke:currentColor;fill:none;stroke-width:1.5}
 #batch{justify-self:end;margin-right:14rem;color:var(--income-accent)}
-/* On the home screen, WebKit can soften text in a scrolling top edge.
-   Pin a full-width, opaque bar to the viewport itself. Reserve exactly its
-   height in the document so the first row stays in its original position. */
-@media (display-mode:standalone), (display-mode:fullscreen){
-  body{padding-top:47px}
-  .document-bar{position:fixed;inset:0 0 auto;z-index:1;padding-inline:max(16rem,calc((100% - 402px)/2 + 16rem))}
-}
 .document-list.income-page{display:flow-root;position:static;visibility:visible;transform:none;transition:none;padding-bottom:25rem}
 .income-record{color:inherit;text-decoration:none}
 .income-empty{padding:28rem 16rem;text-align:center;font-size:15rem;color:#777}
@@ -73,8 +66,15 @@ html.income-subview-open { overflow: hidden; }
 .income-subview-open #batch { margin-right: 0; }
 .document-bar h1:focus { outline: none; }
   </style>
+<link id="installed-headers" rel="stylesheet" href="installed-headers.css?v=51" media="(display-mode: standalone), (display-mode: fullscreen)">
+<script>
+  // A managed iOS Home Screen icon can report browser display mode.
+  if (location.protocol !== 'file:' && navigator.standalone === true) {
+    document.getElementById('installed-headers').media = 'all';
+  }
+</script>
 </head>
-<body>
+<body class="income-document">
   <header class="document-bar">
     <a class="document-back" id="back" href="./" aria-label="返回上一页"><svg viewBox="0 0 10 19" aria-hidden="true"><path d="M9 1 1 9.5 9 18"/></svg>返回</a>
     <h1 tabindex="-1">收入纳税明细</h1>

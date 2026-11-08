@@ -1,0 +1,69 @@
+/* Home Screen and fullscreen only. iOS supplies the top inset in the auto viewport. */
+.web-shell .phone {
+  --tab-gutter: max(0px, calc((100vw - 402rem) / 2));
+}
+
+.web-shell .phone > .header,
+.web-shell .phone > .tab-page .tab-heading,
+.web-shell .phone > .profile > .tab-top {
+  position: fixed;
+  inset: 0 0 auto;
+  width: 100%;
+}
+
+.web-shell .phone > .header .search-row {
+  max-width: 402rem;
+  margin-inline: auto;
+}
+
+/* Keep the notices, filters and scrolling pane directly below the bar
+   when its title is taken out of normal flow. */
+.web-shell .phone > .tab-page:not(.profile) > .tab-top {
+  padding-top: var(--shell-header-height);
+}
+
+.web-shell .phone > .tab-page .tab-heading {
+  z-index: 1;
+  padding-inline: calc(var(--tab-gutter) + 13rem);
+  background-color: #337cf1;
+  background-image: inherit;
+}
+
+.web-shell .phone > .profile {
+  padding-top: var(--profile-hero-height);
+}
+
+.web-shell .phone > .profile > .tab-top {
+  background-position: center top, left var(--tab-gutter) bottom, right var(--tab-gutter) bottom;
+}
+
+.web-shell .profile .profile-info-surface {
+  inset-inline: calc(var(--tab-gutter) + 23rem);
+}
+
+.web-shell .profile .profile-name,
+.web-shell .profile .profile-identity {
+  left: calc(var(--tab-gutter) + 49rem);
+}
+
+.web-shell .phone > .profile .personal-hit {
+  right: calc(var(--tab-gutter) + 23rem);
+}
+
+.web-shell .phone > .flow-page {
+  padding-top: var(--app-bar);
+}
+
+.web-shell .flow-page > .income-bar {
+  position: fixed;
+  inset: 0 0 auto;
+  padding-inline: max(16rem, calc((100% - 402px) / 2 + 16rem));
+}
+
+body.income-document { padding-top: 47px; }
+.document-bar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 1;
+  padding-inline: max(16rem, calc((100% - 402px) / 2 + 16rem));
+}
