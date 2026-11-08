@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v56-fixed-scale-20261109';
+const VERSION = 'v57-fixed-scale-20261109';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
@@ -8,7 +8,7 @@ const CACHE = PREFIX + VERSION;
 const INCOME_ASSETS = [
   'income.css?v=53', 'flows.css?v=53', 'typography.css?v=56', 'income-refinement.css?v=53',
   'income-preset.js?v=25', 'income-defaults.js?v=37', 'income-model.js?v=42', 'income-detail.js?v=42',
-  'installed-headers.css?v=51', 'income-navigation.js?v=47', 'income-view.js?v=46', 'touch-gestures.js?v=55', 'pwa.js'
+  'installed-headers.css?v=51', 'income-navigation.js?v=47', 'income-view.js?v=46', 'touch-gestures.js?v=57', 'pwa.js'
 ];
 const INCOME_PAGE = new URL('income-view.html', BASE).href;
 const INCOME_ASSET_URLS = new Set(INCOME_ASSETS.map(file => new URL(file, BASE).href));

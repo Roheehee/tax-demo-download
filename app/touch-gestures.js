@@ -5,14 +5,21 @@
   const editable = 'input, textarea, select, label, [contenteditable]:not([contenteditable="false"])';
   let start;
   let previous;
+  let multiTouch = false;
 
   function reset() {
     start = previous = null;
+    multiTouch = false;
   }
 
   const passive = { capture: true, passive: true };
   document.addEventListener('touchstart', event => {
-    if (event.touches.length !== 1 || event.target.closest(editable)) {
+    if (event.touches.length > 1) {
+      reset();
+      multiTouch = true;
+      return;
+    }
+    if (event.target.closest(editable)) {
       reset();
       return;
     }
@@ -27,6 +34,12 @@
   }, passive);
 
   document.addEventListener('touchend', event => {
+    // WebKit can synthesize a click on a card when the last finger of a pinch lifts.
+    if (multiTouch) {
+      if (event.cancelable) event.preventDefault();
+      if (event.touches.length === 0) reset();
+      return;
+    }
     if (!start) return;
     const touch = event.changedTouches[0];
     const x = touch.clientX;
