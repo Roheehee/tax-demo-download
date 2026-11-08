@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v48-pending-query-20261108';
+const VERSION = 'v49-home-icon-20261109';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
@@ -57,10 +57,10 @@ const FILES = [
   "editor.js",
   "flows.js",
   "home-refinement.css",
-  "icons/app-192.png",
-  "icons/app-512.png",
-  "icons/app.svg",
-  "icons/apple-touch-icon.png",
+  "icons/v49/app-192.png",
+  "icons/v49/app-512.png",
+  "icons/v49/app.svg",
+  "icons/v49/apple-touch-icon.png",
   "income-view.html",
   "income.js",
   "index.html",
