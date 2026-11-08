@@ -1,12 +1,12 @@
 'use strict';
-const VERSION = 'v52-profile-colors-20261109';
+const VERSION = 'v53-action-colors-20261109';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
 // Match the exact asset revisions used by the income document. A newer shell
 // asking an older worker for a different revision must still reach the network.
 const INCOME_ASSETS = [
-  'income.css?v=5', 'flows.css?v=44', 'typography.css?v=44', 'income-refinement.css?v=46',
+  'income.css?v=53', 'flows.css?v=53', 'typography.css?v=44', 'income-refinement.css?v=53',
   'income-preset.js?v=25', 'income-defaults.js?v=37', 'income-model.js?v=42', 'income-detail.js?v=42',
   'installed-headers.css?v=51', 'income-navigation.js?v=47', 'income-view.js?v=46', 'pwa.js'
 ];
@@ -40,7 +40,7 @@ const FILES = [
   "assets/profile-ui/about.png",
   "app-shell.css",
   "tab-headers.css?v=51",
-  "flow-header.css?v=51",
+  "flow-header.css?v=53",
   "assets/bank-reference.svg",
   "assets/home-scroll.jpg",
   "assets/home-top.jpg",
@@ -51,9 +51,9 @@ const FILES = [
   "assets/queries.jpg",
   "assets/services.jpg",
   "assets/todo.jpg",
-  "data-backup.css",
+  "data-backup.css?v=53",
   "data-backup.js",
-  "editor.css",
+  "editor.css?v=53",
   "editor.js",
   "flows.js",
   "home-refinement.css",
@@ -68,11 +68,11 @@ const FILES = [
   "manifest.webmanifest",
   "profile-refinement.css",
   "tabs-refinement.css",
-  "tabs.css",
+  "tabs.css?v=53",
   "tabs.js",
   "tax-demo-qr.js",
   "tax-document.js",
-  "tax-records.css",
+  "tax-records.css?v=53",
   "tax-records.js",
 ];
 const URLS = FILES.map(file => new URL(file, BASE).href);

@@ -63,7 +63,7 @@
   grid-area: 1 / 1;
   justify-self: start;
   gap: 4px;
-  color: var(--income-nav-color, #5286d0);
+  color: var(--income-accent);
 }
 .web-shell .flow-page > .income-bar .flow-back[hidden] { display: none; }
 
@@ -73,19 +73,10 @@
   margin: 0;
   border: 0;
   transform: none;
-  background: var(--flow-arrow-color, #4984e1);
+  background: currentColor;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 19'%3E%3Cpath d='M9 1 1 9.5 9 18' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
 }
 
-/* Income navigation uses the same ink as the query button. */
-:is(.income-query-flow, .income-detail-flow, .tax-calculation-flow) > .income-bar {
-  --flow-arrow-color: currentColor;
-  --income-nav-color: var(--income-accent);
-}
-:is(.income-query-flow, .income-detail-flow, .tax-calculation-flow) > .income-bar .flow-back,
-.income-detail-flow > .income-bar .batch {
-  color: var(--income-accent);
-}
 .web-shell .income-query-flow .flow-back > .back-chevron {
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 19'%3E%3Cpath d='M9.5 1 1.5 9.5 9.5 18' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E") center / contain no-repeat;
 }
@@ -102,6 +93,6 @@
   justify-self: end;
   justify-content: flex-end;
   height: 44px;
-  color: var(--income-nav-color, #5485d8);
+  color: var(--income-accent);
 }
 .web-shell .flow-page > .income-bar > span:empty { display: none; }

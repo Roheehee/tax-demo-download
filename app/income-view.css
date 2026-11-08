@@ -17,7 +17,7 @@ dialog{box-sizing:border-box;width:min(92vw,370px);padding:20px;border:0;border-
 dialog::backdrop{background:#0005}
 dialog h2{margin:0;font-size:18px}
 dialog form{display:flex;justify-content:flex-end}
-dialog button{padding:6px 12px;color:#5286D0}
+dialog button{padding:6px 12px;color:var(--income-accent)}
 
 /* The list remains the scrolling document underneath both pushed screens. */
 .document-list .income-summary { position: static; }
