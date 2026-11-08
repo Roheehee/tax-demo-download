@@ -1,6 +1,10 @@
 /* Native iPhone text metrics; rem is the existing 402-point design unit. */
 :root { --income-accent: #4286f5; }
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  touch-action: manipulation;
+}
 body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font-family:inherit;letter-spacing:normal}
 .income-bar h1{font-size:18rem;line-height:25rem;font-weight:400;letter-spacing:0}
