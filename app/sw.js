@@ -1,5 +1,5 @@
 'use strict';
-const VERSION = 'v57-fixed-scale-20261109';
+const VERSION = 'v58-service-artwork-20261117';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'tax-demo-cloud-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;

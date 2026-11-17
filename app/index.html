@@ -1,5 +1,19 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="tax-demo-shell" content="app"><meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=auto"><title>个人所得税</title><link rel="manifest" href="manifest.webmanifest?v=50"><meta name="theme-color" content="#2788ef"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="个人所得税"><link rel="apple-touch-icon" href="icons/v50/apple-touch-icon.png">
+<!-- Prepare hidden service-tab artwork before the first navigation. -->
+<link rel="preload" as="image" href="assets/services.jpg" fetchpriority="high" data-service-art>
+<link rel="preload" as="image" href="assets/queries.jpg" data-service-art>
+<link rel="preload" as="image" href="assets/invoices.jpg" data-service-art>
+<script>
+// Keep decoded images available without waiting in the tab's click handler.
+const serviceArtwork = [...document.querySelectorAll('[data-service-art]')].map(link => {
+  const image = new Image();
+  image.decoding = 'async';
+  image.src = link.href;
+  if (image.decode) image.decode().catch(() => { /* CSS can retry normally. */ });
+  return image;
+});
+</script>
 <script>
 if (location.protocol === 'file:') {
   document.querySelector('meta[name="viewport"]').content = 'width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover';
